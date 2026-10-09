@@ -33,6 +33,7 @@ offset_right = 130.0
 offset_bottom = 90.0
 grow_horizontal = 2
 grow_vertical = 2
+alignment = 1
 
 [node name="Title" type="Label" parent="UIContainer" unique_id=2126939754]
 layout_mode = 2
@@ -51,15 +52,22 @@ layout_mode = 2
 
 [node name="Content" type="VBoxContainer" parent="UIContainer/Panel/Margin" unique_id=1915450919]
 layout_mode = 2
+alignment = 1
 
 [node name="RetryButton" type="Button" parent="UIContainer/Panel/Margin/Content" unique_id=829182059]
+custom_minimum_size = Vector2(180, 0)
 layout_mode = 2
+size_flags_horizontal = 4
 text = "Retry"
 
 [node name="ReturnToMapButton" type="Button" parent="UIContainer/Panel/Margin/Content" unique_id=1096594572]
+custom_minimum_size = Vector2(180, 0)
 layout_mode = 2
+size_flags_horizontal = 4
 text = "Return to Map"
 
 [node name="MainMenuButton" type="Button" parent="UIContainer/Panel/Margin/Content" unique_id=1742897501]
+custom_minimum_size = Vector2(180, 0)
 layout_mode = 2
+size_flags_horizontal = 4
 text = "Main Menu"
