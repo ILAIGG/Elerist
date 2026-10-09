@@ -8,6 +8,7 @@
 [ext_resource type="Script" uid="uid://dnqi7x31tikbu" path="res://Scripts/Systems/EnemySpawner.cs" id="6_lg6u0"]
 [ext_resource type="TileSet" uid="uid://ddi1a4dgycg4a" path="res://Assets/Tilesets/Terrain.tres" id="6_u2ioh"]
 [ext_resource type="PackedScene" uid="uid://bmsfw8siu6wpu" path="res://Scenes/Entities/Enemy.tscn" id="7_ijlj7"]
+[ext_resource type="PackedScene" path="res://Scenes/Entities/FlyingEnemy.tscn" id="13_flying"]
 [ext_resource type="PackedScene" uid="uid://bhs8rrtrjpiyt" path="res://Scenes/Entities/Player.tscn" id="8_dq7cm"]
 [ext_resource type="Script" uid="uid://ep3hviiql5it" path="res://Scripts/Systems/KillBossCondition.cs" id="8_p3yta"]
 [ext_resource type="Script" uid="uid://dn5h6ntvx8ney" path="res://Scripts/Systems/SurviveTimeCondition.cs" id="9_c0wbg"]
@@ -45,6 +46,7 @@ collision_layer = 8
 [node name="EnemySpawner" type="Node" parent="." unique_id=71016853]
 script = ExtResource("6_lg6u0")
 EnemyScene = ExtResource("7_ijlj7")
+FlyingEnemyScene = ExtResource("13_flying")
 SpawnRadius = 800.0
 
 [node name="KillBossCondition" type="Node" parent="." unique_id=939733064]

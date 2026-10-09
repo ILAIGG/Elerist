@@ -5,6 +5,9 @@ public partial class EnemySpawner : Node
 {
     //La escena del enemigo que se va a instanciar
     [Export] public PackedScene EnemyScene { get; set; }
+    [Export] public PackedScene FlyingEnemyScene { get; set; }
+
+    private const float FlyingEnemyChance = 0.3f;
 
     //Cada cuantos segundos aparece un enemigo al inicio
     [Export] public float SpawnInterval = 1.5f;
@@ -80,7 +83,10 @@ public partial class EnemySpawner : Node
 
     private void SpawnEnemy()
     {
-        Enemy enemy = EnemyScene.Instantiate<Enemy>();
+        PackedScene scene = FlyingEnemyScene != null && GD.Randf() < FlyingEnemyChance
+            ? FlyingEnemyScene
+            : EnemyScene;
+        Enemy enemy = scene.Instantiate<Enemy>();
 
         //Busca el contenedor de enemigos
         Node enemyContainer = GetTree().Root.FindChild("Enemies", true, false);
