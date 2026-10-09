@@ -105,7 +105,7 @@ upgrade.frost_ray_wide.name,Wide Beam,Rayo amplio
 upgrade.frost_ray_chain.name,Chaining Frost,Hielo encadenado
 upgrade.frost_ray_slow_duration.name,Lingering Chill,Frío persistente
 upgrade.unlock_repulsion_burst.name,Repulsion Burst,Estallido de repulsión
-upgrade.repulsion_burst_damage.name,Arcane Repulsion,Repulsión arcana
+upgrade.repulsion_burst_damage.name,Terrain Repulsion,Repulsión terrestre
 upgrade.repulsion_burst_shockwave.name,Shockwave,Onda expansiva
 upgrade.repulsion_burst_extended.name,Extended Burst,Estallido ampliado
 upgrade.nova_chain.name,Nova Chain,Cadena de nova
@@ -124,7 +124,7 @@ upgrade.fireball_explosive.description,Fireball explodes on impact and deals are
 upgrade.fireball_damage.description,+{0} Fireball Damage. This bonus scales up further every time you choose this upgrade card.,+{0} de daño de Bola de fuego. Esta bonificación aumenta cada vez que eliges esta carta.
 upgrade.unlock_water_bolt.description,Fires a water projectile that applies Water to enemies.,Dispara un proyectil de agua que aplica Agua a los enemigos.
 upgrade.water_bolt_damage.name,Pressurized Current,Corriente presurizada
-upgrade.water_bolt_damage.description,+2 Water Bolt Damage. (Current: {0:F0}),+2 de daño del Proyectil de agua (actual: {0:F0})
+upgrade.water_bolt_damage.description,+2 Water Bolt Damage. (Current: +{0:F0}),+2 de daño del Proyectil de agua (actual: +{0:F0})
 upgrade.unlock_frost_ray.description,A beam that pierces and damages enemies it hits.,Un rayo que atraviesa y causa daño a los enemigos.
 upgrade.frost_ray_permafrost.description,Frost Ray completely freezes enemies hit.,El Rayo de hielo congela por completo a los enemigos alcanzados.
 upgrade.frost_ray_wide.description,Frost Ray becomes wider and hits more enemies.,El Rayo de hielo se hace más ancho y alcanza a más enemigos.
