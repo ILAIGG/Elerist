@@ -7,10 +7,18 @@ public partial class Victory : Control
     public override void _Ready()
     {
         Visible = false;
-        _returnToMapButton = GetNode<Button>("ReturnToMapButton");
-        GetNode<Label>("Title").Text = LocalizationManager.Translate("screen.victory");
-        _returnToMapButton.Text = LocalizationManager.Translate("common.return_to_map");
-        _returnToMapButton.Pressed += OnReturnToMapPressed;
+
+        _returnToMapButton = GetNodeOrNull<Button>("Content/VBoxContainer/ReturnToMapButton");
+        Label titleLabel = GetNodeOrNull<Label>("Content/VBoxContainer/Title");
+
+        if (titleLabel != null)
+            titleLabel.Text = LocalizationManager.Translate("screen.victory");
+
+        if (_returnToMapButton != null)
+        {
+            _returnToMapButton.Text = LocalizationManager.Translate("common.return_to_map");
+            _returnToMapButton.Pressed += OnReturnToMapPressed;
+        }
     }
 
     public void ShowVictory()

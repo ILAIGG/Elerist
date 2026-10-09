@@ -10,18 +10,27 @@ public partial class Defeat : Control
     {
         Visible = false;
 
-        _retryButton = GetNode<Button>("UIContainer/Panel/Margin/Content/RetryButton");
-        _returnToMapButton = GetNode<Button>("UIContainer/Panel/Margin/Content/ReturnToMapButton");
-        _mainMenuButton = GetNode<Button>("UIContainer/Panel/Margin/Content/MainMenuButton");
+        _retryButton = GetNodeOrNull<Button>("UIContainer/Panel/Margin/Content/RetryButton");
+        _returnToMapButton = GetNodeOrNull<Button>("UIContainer/Panel/Margin/Content/ReturnToMapButton");
+        _mainMenuButton = GetNodeOrNull<Button>("UIContainer/Panel/Margin/Content/MainMenuButton");
 
-        GetNode<Label>("UIContainer/Title").Text = LocalizationManager.Translate("screen.defeat");
-        _retryButton.Text = LocalizationManager.Translate("common.retry");
-        _returnToMapButton.Text = LocalizationManager.Translate("common.return_to_map");
-        _mainMenuButton.Text = LocalizationManager.Translate("common.main_menu");
+        Label titleLabel = GetNodeOrNull<Label>("UIContainer/Title");
+        if (titleLabel != null)
+            titleLabel.Text = LocalizationManager.Translate("screen.defeat");
 
-        _retryButton.Pressed += OnRetryPressed;
-        _returnToMapButton.Pressed += OnReturnToMapPressed;
-        _mainMenuButton.Pressed += OnMainMenuPressed;
+        if (_retryButton != null)
+            _retryButton.Text = LocalizationManager.Translate("common.retry");
+        if (_returnToMapButton != null)
+            _returnToMapButton.Text = LocalizationManager.Translate("common.return_to_map");
+        if (_mainMenuButton != null)
+            _mainMenuButton.Text = LocalizationManager.Translate("common.main_menu");
+
+        if (_retryButton != null)
+            _retryButton.Pressed += OnRetryPressed;
+        if (_returnToMapButton != null)
+            _returnToMapButton.Pressed += OnReturnToMapPressed;
+        if (_mainMenuButton != null)
+            _mainMenuButton.Pressed += OnMainMenuPressed;
     }
 
     public void ShowDefeat()
