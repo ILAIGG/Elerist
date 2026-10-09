@@ -1,11 +1,11 @@
 keys,en,es
-menu.title,Elementalist,Elementalista
+menu.title,Elerist,Elerist
 menu.new_game,Start A New Game,Nueva partida
 menu.continue,Continue,Continuar
 menu.quit,Quit,Salir
 menu.settings,Settings,Configuración
 menu.language,Language,Idioma
-menu.version,Elementalist v0.3.0 (Journey Update - Part I),Elementalist v0.3.0 (Actualización del viaje - Parte I)
+menu.version,Elerist v0.3.0 (Journey Update - Part I),Elerist v0.3.0 (Actualización del viaje - Parte I)
 common.cancel,Cancel,Cancelar
 common.confirm,Confirm,Confirmar
 common.close,Close,Cerrar
@@ -34,7 +34,7 @@ screen.new_save,Enter your save name,Introduce el nombre de tu partida
 screen.save_name_placeholder,Save name...,Nombre de la partida...
 screen.current_run,Current Run,Partida actual
 screen.play_time,Play time: {0}h {1}m {2}s,Tiempo de juego: {0}h {1}m {2}s
-tutorial.step0,Welcome Elementalist! Move with W - A - S - D or the arrow keys.,¡Bienvenido Elementalista! Muévete con W - A - S - D o las flechas.
+tutorial.step0,Welcome to Elerist! Move with W - A - S - D or the arrow keys.,¡Te damos la bienvenida a Elerist! Muévete con W - A - S - D o las flechas.
 tutorial.step1,Your objective is shown in the top right corner. Survive as long as you can!,Tu objetivo aparece en la esquina superior derecha. ¡Sobrevive tanto como puedas!
 tutorial.step2,This is your health bar. Do not let it reach zero!,Esta es tu barra de vida. ¡No dejes que llegue a cero!
 tutorial.step3,Use Q for Fire Nova and E for Meteor Shower. Space to dash!,¡Usa Q para Nova de fuego y E para Lluvia de meteoros! Pulsa Espacio para hacer dash.
@@ -75,7 +75,7 @@ howto.title,How to Play,Cómo jugar
 howto.controls,Controls - Movement -> WASD - Dash -> Space - Fire Nova -> Q - Meteor Shower -> E,Controles - Movimiento -> WASD - Dash -> Espacio - Nova de fuego -> Q - Lluvia de meteoros -> E
 howto.upgrades,Upgrades - Choose one upgrade card from three options when you level up.,Mejoras - Elige una carta de mejora entre tres opciones al subir de nivel.
 howto.objective,Objective - Survive for 10 minutes and defeat the final boss.,Objetivo - Sobrevive 10 minutos y derrota al jefe final.
-upgrade.type.spell,Spell,Hechizo
+upgrade.type.art,Art,Arte
 upgrade.type.ability,Ability,Habilidad
 upgrade.type.dash,Dash,Dash
 upgrade.type.stat,Stat,Estadística
@@ -112,7 +112,7 @@ upgrade.nova_chain.name,Nova Chain,Cadena de nova
 upgrade.nova_cooldown.name,Nova Frenzy,Frenesí de nova
 upgrade.stat_health.description,+20 Maximum Health.,+20 de vida máxima.
 upgrade.stat_speed.description,+15 Movement Speed.,+15 de velocidad de movimiento.
-upgrade.stat_damage.description,+6 Damage to all spells and abilities.,+6 de daño a todos los hechizos y habilidades.
+upgrade.stat_damage.description,+6 Damage to all arts and abilities.,+6 de daño a todos los artes y habilidades.
 upgrade.stat_regen.description,+{0} HP regenerated every 3 seconds.,+{0} de vida regenerada cada 3 segundos.
 upgrade.dash_invincible.description,The mage is invincible and passes through enemies during the dash.,El mago es invencible y atraviesa enemigos durante el dash.
 upgrade.dash_cooldown.description,-0.2s Dash Cooldown (Current: {0:F2}s),-0.2 s de cooldown del dash (actual: {0:F2} s)

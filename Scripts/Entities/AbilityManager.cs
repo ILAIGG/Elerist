@@ -69,7 +69,7 @@ public partial class AbilityManager : Node
         int count = Mathf.Min(3, sortedEnemies.Count);
         for (int i = 0; i < count; i++)
         {
-            Fireball fireball = _player.SpellCaster.FireballScene.Instantiate<Fireball>();
+            Fireball fireball = _player.ArtCaster.FireballScene.Instantiate<Fireball>();
             GetProjectilesContainer().AddChild(fireball);
             fireball.GlobalPosition = _player.GlobalPosition;
             fireball.Direction = _player.GlobalPosition.DirectionTo(sortedEnemies[i].GlobalPosition);

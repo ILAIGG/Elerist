@@ -35,7 +35,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_colors/font_color = Color(0.7529412, 0.5176471, 0.9882353, 1)
 theme_override_font_sizes/font_size = 64
-text = "Elementalist"
+text = "Elerist"
 
 [node name="PlayButton" type="Button" parent="." unique_id=1037893285]
 custom_minimum_size = Vector2(200, 50)
@@ -150,4 +150,4 @@ offset_top = -23.0
 offset_right = 500.0
 grow_vertical = 0
 theme_override_colors/font_color = Color(0.7528677, 0.5179158, 0.98803645, 0.45800003)
-text = "Elementalist v0.3.0 (Journey Update - Part I)"
+text = "Elerist v0.3.0 (Journey Update - Part I)"

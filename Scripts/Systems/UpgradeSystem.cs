@@ -5,7 +5,7 @@ using Godot;
 //Define los tipos de upgrades que existen
 public enum UpgradeType
 {
-    Spell, //Mejora un hechizo
+    Art, //Mejora un arte
     Ability, //Mejora una habilidad
     Dash, //Mejora el dash
     Stat //Mejora un stat genérico (Vida, Velocidad de movimiento, etc)
@@ -224,7 +224,7 @@ public class UpgradeSystem
             Condition = (player) => _stats.DashCooldown > 0.5f,
         });
 
-        //Upgrade único de hechizo (cambia su comportamiento)
+        //Upgrade único de arte (cambia su comportamiento)
         //Dispara en ráfaga secuencial en línea recta
         _allUpgrades.Add(new Upgrade
         {
@@ -234,7 +234,7 @@ public class UpgradeSystem
                 ? "upgrade.fireball_burst.first_description"
                 : "upgrade.fireball_burst.description",
             GetDescriptionArguments = (times) => new object[] { _stats.FireballBurstCount },
-            Type = UpgradeType.Spell,
+            Type = UpgradeType.Art,
             IsInfinite = true,
             MaxAcquisitions = 9, //Primera vez +2, luego 8 veces +1 = 10 proyectiles máximo
             Condition = (player) => !_excludedIds.Contains("fireball_burst"),
@@ -250,7 +250,7 @@ public class UpgradeSystem
         {
             Id = "fireball_piercing",
             ElementType = Element.Fire,
-            Type = UpgradeType.Spell,
+            Type = UpgradeType.Art,
             IsInfinite = false,
             Condition = (player) => !_excludedIds.Contains("fireball_piercing"),
             Excludes = new[] { "fireball_explosive" },
@@ -265,7 +265,7 @@ public class UpgradeSystem
             Id = "fireball_multishot",
             ElementType = Element.Fire,
             GetDescriptionArguments = (times) => new object[] { _stats.FireballCount },
-            Type = UpgradeType.Spell,
+            Type = UpgradeType.Art,
             IsInfinite = false,
             Condition = (player) => _stats.FireballCount <= 10 && !_excludedIds.Contains("fireball_multishot"),
             Excludes = new[] { "fireball_burst" },
@@ -280,7 +280,7 @@ public class UpgradeSystem
         {
             Id = "fireball_explosive",
             ElementType = Element.Fire,
-            Type = UpgradeType.Spell,
+            Type = UpgradeType.Art,
             IsInfinite = false,
             Condition = (player) => !_excludedIds.Contains("fireball_explosive"),
             Excludes = new[] { "fireball_piercing" },
@@ -290,13 +290,13 @@ public class UpgradeSystem
             }
         });
 
-        //Upgrade stackeable de hechizo (escala con veces aplicado)
+        //Upgrade stackeable de arte (escala con veces aplicado)
         _allUpgrades.Add(new Upgrade
         {
             Id = "fireball_damage",
             ElementType = Element.Fire,
             GetDescriptionArguments = (times) => new object[] { 2f * times },
-            Type = UpgradeType.Spell,
+            Type = UpgradeType.Art,
             IsInfinite = true,
             Apply = (player, times) =>
             {
@@ -310,7 +310,7 @@ public class UpgradeSystem
         {
             Id = "unlock_water_bolt",
             ElementType = Element.Water,
-            Type = UpgradeType.Spell,
+            Type = UpgradeType.Art,
             IsInfinite = false,
             Condition = (player) => !_stats.HasWaterBolt,
             Apply = (player, times) =>
@@ -324,7 +324,7 @@ public class UpgradeSystem
             Id = "water_bolt_damage",
             ElementType = Element.Water,
             GetDescriptionArguments = (times) => new object[] { _stats.BonusWaterBoltDamage },
-            Type = UpgradeType.Spell,
+            Type = UpgradeType.Art,
             IsInfinite = true,
             Condition = (player) => _stats.HasWaterBolt,
             Apply = (player, times) =>
@@ -340,7 +340,7 @@ public class UpgradeSystem
         {
             Id = "unlock_frost_ray",
             ElementType = Element.Ice,
-            Type = UpgradeType.Spell,
+            Type = UpgradeType.Art,
             IsInfinite = false,
             Apply = (player, times) =>
             {
@@ -354,7 +354,7 @@ public class UpgradeSystem
         //     Id = "frost_ray_permafrost",
         //     Name = "Permafrost",
         //     GetDescription = (times) => "Frost Ray now COMPLETELY freezes enemies hit. Freeze duration is halved. The bosses can't be completely frozen.",
-        //     Type = UpgradeType.Spell,
+        //     Type = UpgradeType.Art,
         //     IsInfinite = false,
         //     Condition = (player) => _stats.HasFrostRay,
         //     Apply = (player, times) =>
@@ -368,7 +368,7 @@ public class UpgradeSystem
         {
             Id = "frost_ray_wide",
             ElementType = Element.Ice,
-            Type = UpgradeType.Spell,
+            Type = UpgradeType.Art,
             IsInfinite = false,
             Condition = (player) => _stats.HasFrostRay && !_excludedIds.Contains("frost_ray_wide"),
             Excludes = new[] { "frost_ray_chain" },
@@ -382,7 +382,7 @@ public class UpgradeSystem
         {
             Id = "frost_ray_chain",
             ElementType = Element.Ice,
-            Type = UpgradeType.Spell,
+            Type = UpgradeType.Art,
             IsInfinite = false,
             Condition = (player) => _stats.HasFrostRay && !_excludedIds.Contains("frost_ray_chain"),
             Excludes = new[] { "frost_ray_wide" },
@@ -401,7 +401,7 @@ public class UpgradeSystem
         //     GetDescriptionKey = (times) => _stats.FrostRaySlowFactor != 0
         //         ? "upgrade.frost_ray_slow_duration.description"
         //         : "upgrade.frost_ray_slow_duration.freeze_description",
-        //     Type = UpgradeType.Spell,
+        //     Type = UpgradeType.Art,
         //     IsInfinite = true,
         //     Condition = (player) => _stats.HasFrostRay,
         //     Apply = (player, times) =>
@@ -417,7 +417,7 @@ public class UpgradeSystem
             Id = "unlock_repulsion_burst",
             ElementType = Element.Earth,
             GetDescriptionArguments = (times) => new object[] { _stats.RepulsionBurstFireRate },
-            Type = UpgradeType.Spell,
+            Type = UpgradeType.Art,
             IsInfinite = false,
             Apply = (player, times) =>
             {
@@ -430,7 +430,7 @@ public class UpgradeSystem
             Id = "repulsion_burst_damage",
             ElementType = Element.Earth,
             GetDescriptionArguments = (times) => new object[] { _stats.BonusRepulsionBurstDamage },
-            Type = UpgradeType.Spell,
+            Type = UpgradeType.Art,
             IsInfinite = true,
             Condition = (player) => _stats.HasRepulsionBurst,
             Apply = (player, times) =>
@@ -443,7 +443,7 @@ public class UpgradeSystem
         {
             Id = "repulsion_burst_shockwave",
             ElementType = Element.Earth,
-            Type = UpgradeType.Spell,
+            Type = UpgradeType.Art,
             IsInfinite = false,
             Condition = (player) => _stats.HasRepulsionBurst && !_excludedIds.Contains("repulsion_burst_shockwave"),
             Excludes = new[] { "repulsion_burst_extended" },
@@ -457,7 +457,7 @@ public class UpgradeSystem
         {
             Id = "repulsion_burst_extended",
             ElementType = Element.Earth,
-            Type = UpgradeType.Spell,
+            Type = UpgradeType.Art,
             IsInfinite = false,
             Condition = (player) => _stats.HasRepulsionBurst && !_excludedIds.Contains("repulsion_burst_extended"),
             Excludes = new[] { "repulsion_burst_shockwave" },

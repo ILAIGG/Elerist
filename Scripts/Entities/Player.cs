@@ -30,7 +30,7 @@ public partial class Player : CharacterBody2D
 
     //Componentes
     public PlayerStats Stats { get; private set; }
-    public SpellCaster SpellCaster { get; private set; }
+    public ArtCaster ArtCaster { get; private set; }
     public AbilityManager AbilityManager { get; private set; }
     public HealthSystem Health { get; private set; }
     public ExperienceSystem Experience { get; private set; }
@@ -43,11 +43,11 @@ public partial class Player : CharacterBody2D
         Stats.DashCooldown = BaseDashCooldown;
 
         //Se obtienen los componentes nodo desde la escena
-        SpellCaster = GetNode<SpellCaster>("SpellCaster");
+        ArtCaster = GetNode<ArtCaster>("ArtCaster");
         AbilityManager = GetNode<AbilityManager>("AbilityManager");
 
         //Se inicializan los componentes con referencias al jugador y sus stats
-        SpellCaster.Initialize(this, Stats);
+        ArtCaster.Initialize(this, Stats);
         AbilityManager.Initialize(this, Stats);
 
         _sprite = GetNode<Sprite2D>("Sprite2D");
@@ -95,7 +95,7 @@ public partial class Player : CharacterBody2D
         HandleDash((float)delta);
         HandleMovement();
 
-        SpellCaster.Process((float)delta);
+        ArtCaster.Process((float)delta);
         AbilityManager.Process((float)delta);
 
         if (_needsCollisionRestoration)

@@ -2,7 +2,7 @@ using System.IO;
 using System.Runtime.ConstrainedExecution;
 using Godot;
 
-public partial class SpellCaster : Node
+public partial class ArtCaster : Node
 {
     [Export] public PackedScene FireballScene { get; set; }
     [Export] public PackedScene WaterBoltScene { get; set; }

@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://bhs8rrtrjpiyt"]
 
 [ext_resource type="Script" uid="uid://c2wx831rd4wek" path="res://Scripts/Entities/Player.cs" id="1_3kvya"]
-[ext_resource type="Script" uid="uid://daeelv6xrna5b" path="res://Scripts/Entities/SpellCaster.cs" id="2_agccv"]
+[ext_resource type="Script" uid="uid://daeelv6xrna5b" path="res://Scripts/Entities/ArtCaster.cs" id="2_agccv"]
 [ext_resource type="Texture2D" uid="uid://bj35f6k7iw14u" path="res://Assets/Sprites/Player.png" id="2_wmg1a"]
 [ext_resource type="Script" uid="uid://bq2v3ej6avsiq" path="res://Scripts/Entities/AbilityManager.cs" id="3_g4oe6"]
 [ext_resource type="PackedScene" uid="uid://4jf41esh0ijh" path="res://Scenes/Entities/Fireball.tscn" id="3_km4ui"]
@@ -32,7 +32,7 @@ position = Vector2(-5.9604645e-08, -5.9604645e-08)
 scale = Vector2(2, 2)
 texture = ExtResource("2_wmg1a")
 
-[node name="SpellCaster" type="Node" parent="." unique_id=857088393]
+[node name="ArtCaster" type="Node" parent="." unique_id=857088393]
 script = ExtResource("2_agccv")
 FireballScene = ExtResource("3_km4ui")
 WaterBoltScene = ExtResource("3_waterbolt")
