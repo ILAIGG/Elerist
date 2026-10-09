@@ -8,6 +8,7 @@ public partial class Enemy : CharacterBody2D, IEnemy
     [Export] public Element ElementType { get; set; } = Element.Neutral;
     [Export] public float Speed = 155f;
     [Export] public float MaxHealth = 30f;
+    [Export] public float DespawnDistance = 1400f;
 
     private Sprite2D _sprite;
     private Sprite2D _reactionSprite;
@@ -69,6 +70,12 @@ public partial class Enemy : CharacterBody2D, IEnemy
         UpdateStatusEffectVisuals();
 
         if (_player == null) return;
+
+        if (GlobalPosition.DistanceSquaredTo(_player.GlobalPosition) > DespawnDistance * DespawnDistance)
+        {
+            QueueFree();
+            return;
+        }
 
         //Se aplica el knockback y se reduce gradualmente
         if (_knockbackVelocity != Vector2.Zero)
