@@ -130,7 +130,7 @@ public partial class Boss : CharacterBody2D, IEnemy
     {
         float multiplier = ElementalChart.GetDamageMultiplier(attackElement, ElementType);
         float finalDamage = amount * multiplier;
-        Health.TakeDamage(finalDamage, position, tree, entityId);
+        Health.TakeDamage(finalDamage, position, tree, entityId, true, attackElement);
         ElementalEffects.Apply(attackElement, finalDamage);
     }
 
@@ -166,7 +166,9 @@ public partial class Boss : CharacterBody2D, IEnemy
             ElementalReaction.Freezing => "reaction.freezing",
             _ => string.Empty
         });
-        DamageNumberSystem.SpawnReaction(GetTree(), GlobalPosition, reactionName, reactionDamage);
+        DamageNumberSystem.SpawnReaction(
+            GetTree(), GlobalPosition, reactionName, reactionDamage,
+            ElementColorPalette.GetReactionColor(reaction));
     }
 
     private void UpdateStatusEffectVisuals()

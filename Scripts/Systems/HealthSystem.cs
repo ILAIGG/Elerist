@@ -35,7 +35,7 @@ public class HealthSystem
         CurrentHealth = maxHealth;
     }
 
-    public void TakeDamage(float amount, Vector2 position, SceneTree tree, ulong entityId = 0, bool showDamageNumber = true)
+    public void TakeDamage(float amount, Vector2 position, SceneTree tree, ulong entityId = 0, bool showDamageNumber = true, Element damageElement = Element.Neutral)
     {
         if (IsDead) return;
 
@@ -52,7 +52,7 @@ public class HealthSystem
         OnDamageTaken?.Invoke();
 
         if (showDamageNumber)
-            DamageNumberSystem.Spawn(tree, position, amount, false, entityId);
+            DamageNumberSystem.Spawn(tree, position, amount, false, entityId, damageElement);
 
         if (IsDead)
             OnDeath?.Invoke();

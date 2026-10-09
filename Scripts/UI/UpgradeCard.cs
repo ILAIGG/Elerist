@@ -18,7 +18,7 @@ public partial class UpgradeCard : PanelContainer
 		string localizedName = LocalizationManager.Translate(upgrade.NameKey);
 		GetNode<Label>("CardContent/UpgradeName").Text = localizedName;
 		GetNode<Label>("CardContent/UpgradeType").Text = LocalizationManager.Translate($"upgrade.type.{upgrade.Type.ToString().ToLowerInvariant()}");
-		GetNode<Label>("CardContent/UpgradeElement").Text = LocalizationManager.Translate($"upgrade.element.{upgrade.ElementType.ToString().ToLowerInvariant()}");
+		SetElementLabel(upgrade.ElementType);
 
 		int nextApplication = upgrade.TimesApplied + 1;
 		string descriptionKey = upgrade.GetLocalizedDescriptionKey(nextApplication);
@@ -40,9 +40,7 @@ public partial class UpgradeCard : PanelContainer
 			LocalizationManager.Translate(
 				$"upgrade.type.{upgrade.Type.ToString().ToLowerInvariant()}");
 
-		GetNode<Label>("CardContent/UpgradeElement").Text =
-			LocalizationManager.Translate(
-				$"upgrade.element.{upgrade.ElementType.ToString().ToLowerInvariant()}");
+		SetElementLabel(upgrade.ElementType);
 
 		int currentApplication = upgrade.TimesApplied;
 
@@ -56,6 +54,14 @@ public partial class UpgradeCard : PanelContainer
 
 		GetNode<Label>("CardContent/UpgradeDescription").Text =
 			localizedDescription;
+	}
+
+	private void SetElementLabel(Element element)
+	{
+		Label elementLabel = GetNode<Label>("CardContent/UpgradeElement");
+		elementLabel.Text = LocalizationManager.Translate(
+			$"upgrade.element.{element.ToString().ToLowerInvariant()}");
+		elementLabel.AddThemeColorOverride("font_color", ElementColorPalette.GetColor(element));
 	}
 
     public override void _GuiInput(InputEvent @event)

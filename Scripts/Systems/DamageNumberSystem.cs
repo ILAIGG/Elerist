@@ -17,7 +17,7 @@ public static class DamageNumberSystem
         _scene = scene;
     }
 
-    public static void Spawn(SceneTree tree, Vector2 position, float damage, bool isCrit = false, ulong entityId = 0)
+    public static void Spawn(SceneTree tree, Vector2 position, float damage, bool isCrit = false, ulong entityId = 0, Element element = Element.Neutral)
     {
         if (_scene == null) return;
 
@@ -44,20 +44,20 @@ public static class DamageNumberSystem
         float offsetX = (float)GD.RandRange(-15, 15);
         number.Position = position + new Vector2(offsetX, 0);
 
-        number.Initialize(damage, isCrit);
+        number.Initialize(damage, isCrit, element);
 
         //Se lo agrega al contenedor de proyectiles para que esté en el mundo
         tree.Root.FindChild("Projectiles", true, false)?.AddChild(number);
     }
 
-    public static void SpawnReaction(SceneTree tree, Vector2 position, string reactionName, float reactionDamage)
+    public static void SpawnReaction(SceneTree tree, Vector2 position, string reactionName, float reactionDamage, Color color)
     {
         if (_scene == null) return;
 
         DamageNumber number = _scene.Instantiate<DamageNumber>();
         float offsetX = (float)GD.RandRange(-15, 15);
         number.Position = position + new Vector2(offsetX, 0);
-        number.InitializeReaction(reactionName, reactionDamage);
+        number.InitializeReaction(reactionName, reactionDamage, color);
 
         tree.Root.FindChild("Projectiles", true, false)?.AddChild(number);
     }

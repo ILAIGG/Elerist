@@ -8,7 +8,7 @@ public partial class DamageNumber : Node2D
     private float _timer = 0f;
     private Label _label;
 
-    public void Initialize(float damage, bool isCrit = false)
+    public void Initialize(float damage, bool isCrit, Element element)
     {
         ZIndex = 10; //Esto hace que salga siempre encima de todo
         _label = GetNode<Label>("Label");
@@ -18,15 +18,15 @@ public partial class DamageNumber : Node2D
         if (isCrit)
         {
             _label.AddThemeFontSizeOverride("font_size", 24);
-            _label.AddThemeColorOverride("font_color", new Color(1f, 0.8f, 0f));
+            _label.AddThemeColorOverride("font_color", ElementColorPalette.GetColor(element));
         }
         else
         {
-            _label.AddThemeColorOverride("font_color", new Color(1f, 1f, 1f));
+            _label.AddThemeColorOverride("font_color", ElementColorPalette.GetColor(element));
         }
     }
 
-    public void InitializeReaction(string reactionName, float reactionDamage)
+    public void InitializeReaction(string reactionName, float reactionDamage, Color color)
     {
         ZIndex = 10;
         _label = GetNode<Label>("Label");
@@ -35,7 +35,7 @@ public partial class DamageNumber : Node2D
             : reactionName;
         _label.Position = new Vector2(-65f, -12f);
         _label.Size = new Vector2(130f, 48f);
-        _label.AddThemeColorOverride("font_color", new Color(1f, 1f, 1f));
+        _label.AddThemeColorOverride("font_color", color);
     }
 
     public override void _Process(double delta)
