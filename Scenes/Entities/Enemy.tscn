@@ -1,7 +1,8 @@
-[gd_scene format=3 uid="uid://bmsfw8siu6wpu"]
+[gd_scene load_steps=4 format=3 uid="uid://bmsfw8siu6wpu"]
 
 [ext_resource type="Script" uid="uid://dalrgcabg35hs" path="res://Scripts/Entities/Enemy.cs" id="1_8q37v"]
 [ext_resource type="Texture2D" uid="uid://itwnwlxff1n1" path="res://Assets/Sprites/Enemy.png" id="2_jajit"]
+[ext_resource type="PackedScene" path="res://Scenes/Entities/EnemyProjectile.tscn" id="3_projectile"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_vhqxl"]
 size = Vector2(20, 22)
@@ -11,6 +12,7 @@ collision_layer = 2
 collision_mask = 27
 motion_mode = 1
 script = ExtResource("1_8q37v")
+RangedProjectileScene = ExtResource("3_projectile")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1042346840]
 position = Vector2(1, 2)

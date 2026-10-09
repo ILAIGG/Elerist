@@ -1,6 +1,18 @@
 using System.Timers;
 using Godot;
 
+public enum EnemyMovementMode
+{
+    Ground,
+    Flying
+}
+
+public enum EnemyAttackMode
+{
+    Contact,
+    Ranged
+}
+
 public partial class Enemy : CharacterBody2D, IEnemy
 {
     private static readonly Color FrozenTint = new(0.72f, 0.9f, 1f);
@@ -9,6 +21,14 @@ public partial class Enemy : CharacterBody2D, IEnemy
     [Export] public float Speed = 155f;
     [Export] public float MaxHealth = 30f;
     [Export] public float DespawnDistance = 1400f;
+    [Export] public EnemyMovementMode MovementMode { get; set; } = EnemyMovementMode.Ground;
+    [Export] public EnemyAttackMode AttackMode { get; set; } = EnemyAttackMode.Contact;
+    [Export] public float ContactDamage = 8f;
+    [Export] public float RangedAttackRange = 250f;
+    [Export] public float RangedAttackDamage = 8f;
+    [Export] public float RangedAttackInterval = 1.5f;
+    [Export] public float RangedProjectileSpeed = 260f;
+    [Export] public PackedScene RangedProjectileScene { get; set; }
 
     private Sprite2D _sprite;
     private Sprite2D _reactionSprite;
@@ -16,7 +36,7 @@ public partial class Enemy : CharacterBody2D, IEnemy
     //Variables para el cooldown de daño
     private float _damageCooldown = 0f;
     private const float DamageInterval = 0.5f; //Cada 0.5 segundos
-    private const float ContactDamage = 8f; //Daño por impacto
+    private float _rangedAttackCooldown = 0f;
 
     //La XP que da este enemigo al morir. Se usa MaxHealth como base para que los enemigos más fuertes den aún más XP automáticamente.
     public float XPValue => 10 * (MaxHealth / 30f);
@@ -38,6 +58,9 @@ public partial class Enemy : CharacterBody2D, IEnemy
         ElementalEffects.ElementApplied += OnElementApplied;
         Health = new HealthSystem(MaxHealth);
         Health.OnDamageTaken += OnEnemyDamageTaken;
+
+        if (MovementMode == EnemyMovementMode.Flying)
+            SetCollisionMaskValue(5, false);
 
         _sprite = GetNode<Sprite2D>("Sprite2D");
         _reactionSprite = GetNodeOrNull<Sprite2D>("ReactionSprite");
@@ -92,10 +115,29 @@ public partial class Enemy : CharacterBody2D, IEnemy
 
         //Se calcula la dirección desde el enemigo hasta el jugador. Simplemente se le resta la posición del enemigo a la posición del jugador
         Vector2 direction = (_player.GlobalPosition - GlobalPosition).Normalized();
+        float distanceToPlayer = GlobalPosition.DistanceTo(_player.GlobalPosition);
 
         //Voltea sprite según dirección horizontal
         if (direction.X != 0)
             _sprite.FlipH = direction.X < 0;
+
+        if (AttackMode == EnemyAttackMode.Ranged)
+        {
+            Velocity = distanceToPlayer > RangedAttackRange
+                ? direction * Speed * _statusEffects.MovementFactor
+                : Vector2.Zero;
+            MoveAndSlide();
+
+            if (distanceToPlayer <= RangedAttackRange && _rangedAttackCooldown <= 0f)
+            {
+                FireRangedProjectile(direction);
+                _rangedAttackCooldown = RangedAttackInterval;
+            }
+
+            if (_rangedAttackCooldown > 0f)
+                _rangedAttackCooldown -= (float)delta;
+            return;
+        }
 
         Velocity = direction * Speed * _statusEffects.MovementFactor;
         MoveAndSlide();
@@ -133,6 +175,18 @@ public partial class Enemy : CharacterBody2D, IEnemy
             //Si se pierde el contacto, el cooldown se resetea a 0 para el próximo impacto
             _damageCooldown = 0f;
         }
+    }
+
+    private void FireRangedProjectile(Vector2 direction)
+    {
+        if (RangedProjectileScene == null)
+            return;
+
+        EnemyProjectile projectile = RangedProjectileScene.Instantiate<EnemyProjectile>();
+        Node projectileContainer = GetTree().Root.FindChild("Projectiles", true, false) ?? GetTree().CurrentScene;
+        projectileContainer.AddChild(projectile);
+        projectile.GlobalPosition = GlobalPosition;
+        projectile.Initialize(direction, RangedProjectileSpeed, RangedAttackDamage, GetInstanceId());
     }
 
     public void ScaleStats(float healthMultiplier, float speedMultiplier)
