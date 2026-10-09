@@ -2,7 +2,7 @@ using Godot;
 
 public partial class SurviveTimeCondition : VictoryCondition
 {
-    [Export] public float TimeToSurvive { get; set; } = 300f; // 5 minutos por defecto
+    [Export] public float TimeToSurvive { get; set; } = 120f; // 2 minutos por defecto
 
     private float _timer = 0f;
     private bool _completed = false;

@@ -30,6 +30,12 @@ public static class LevelCatalog
         new("Forest_5", "Forest 5", GD.Load<PackedScene>("res://Scenes/World/Level_Forest_5.tscn"), 1.8f)
     };
 
+    private static readonly LevelDefinition ForestBossBattle = new(
+        "Forest_BossBattle",
+        "Boss Battle",
+        GD.Load<PackedScene>("res://Scenes/World/Level_Forest_BossBattle.tscn"),
+        1.0f);
+
     public static LevelDefinition[] GetWorldLevels(string worldId)
     {
         if (worldId != ForestWorldId)
@@ -40,6 +46,9 @@ public static class LevelCatalog
 
     public static LevelDefinition GetLevel(string levelId)
     {
+        if (levelId == ForestBossBattle.Id)
+            return ForestBossBattle;
+
         foreach (LevelDefinition level in ForestLevels)
         {
             if (level.Id == levelId)

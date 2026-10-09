@@ -17,5 +17,5 @@ tile_map_data = PackedByteArray("AADC/7T/AQABAAAAAADD/7T/AQABAAAAAADE/7T/AQABAAA
 Enabled = false
 
 [node name="SurviveTimeCondition" parent="." index="9" unique_id=1049670784]
-TimeToSurvive = 420.0
+TimeToSurvive = 120.0
 Enabled = true

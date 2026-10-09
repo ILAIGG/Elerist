@@ -5,12 +5,8 @@ public partial class Level : Node2D
 {
     [Export] public PackedScene DamageNumberScene { get; set; }
 
-    //600 secs = 10 mins
-    [Export] public float BossTimer = 600f;
     [Export] public PackedScene BossScene { get; set; }
 
-    private float _gameTimer = 0f;
-    private bool _bossSpawned = false;
     private bool _victoryAchieved = false;
 
     //Pausa
@@ -59,6 +55,8 @@ public partial class Level : Node2D
             _runCompleted = runCompletedScene.Instantiate<RunCompleted>();
             _runCompleted.ProcessMode = Node.ProcessModeEnum.Always;
             GetNode<CanvasLayer>("UI").AddChild(_runCompleted);
+
+            SpawnBoss();
         }
 
         //Inicializa el objetivo en el HUD
@@ -85,7 +83,6 @@ public partial class Level : Node2D
 
     public override void _Process(double delta)
     {
-
         //Actualiza el objetivo de supervivencia en el HUD
         if (_surviveTimeCondition != null && _surviveTimeCondition.Enabled && !_victoryAchieved)
             _hud?.UpdateObjectiveTime(_surviveTimeCondition.GetTimeRemaining());
@@ -115,20 +112,14 @@ public partial class Level : Node2D
                 return;
             }
         }
-
-        if (_bossSpawned) return;
-
-        _gameTimer += (float)delta;
-
-        if (_gameTimer >= BossTimer)
-        {
-            _bossSpawned = true;
-            SpawnBoss();
-        }
     }
 
     private void SpawnBoss()
     {
+        EnemySpawner spawner = GetTree().Root.FindChild("EnemySpawner", true, false) as EnemySpawner;
+        if (spawner != null)
+            spawner.IsPaused = true;
+
         Node enemyContainer = GetTree().Root.FindChild("Enemies", true, false);
         Boss boss = BossScene.Instantiate<Boss>();
         enemyContainer.AddChild(boss);
@@ -139,11 +130,6 @@ public partial class Level : Node2D
         {
             boss.GlobalPosition = GetBossSpawnPosition(player);
         }
-
-        //Se pausa el spawner cuando aparece el Boss
-        EnemySpawner spawner = GetTree().Root.FindChild("EnemySpawner", true, false) as EnemySpawner;
-        if (spawner != null)
-            spawner.IsPaused = true;
 
         // Notifica a la condición que el jefe apareció
         _killBossCondition?.NotifyBossSpawned();

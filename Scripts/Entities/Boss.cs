@@ -152,13 +152,21 @@ public partial class Boss : CharacterBody2D, IEnemy
 
         if (reaction == ElementalReaction.Vaporization)
         {
-            Health.TakeDamage(reactionDamage, GlobalPosition, GetTree(), GetInstanceId());
+            Health.TakeDamage(reactionDamage, GlobalPosition, GetTree(), GetInstanceId(), false);
             ApplyStatusEffect(new VaporizedEffect(0.65f, 1.2f));
         }
         else if (reaction == ElementalReaction.Freezing)
         {
             ApplyStatusEffect(new FrozenEffect(0f, 1.5f));
         }
+
+        string reactionName = LocalizationManager.Translate(reaction switch
+        {
+            ElementalReaction.Vaporization => "reaction.vaporization",
+            ElementalReaction.Freezing => "reaction.freezing",
+            _ => string.Empty
+        });
+        DamageNumberSystem.SpawnReaction(GetTree(), GlobalPosition, reactionName, reactionDamage);
     }
 
     private void UpdateStatusEffectVisuals()

@@ -138,3 +138,5 @@ upgrade.repulsion_burst_extended.description,Increase Repulsion Burst range and 
 upgrade.nova_chain.description,Fire Nova launches Fireballs when detonating.,La Nova de fuego lanza Bolas de fuego al detonar.
 upgrade.nova_cooldown.description,-0.5s Fire Nova Cooldown (Current: {0:F2}s),-0.5 s de cooldown de la Nova de fuego (actual: {0:F2} s)
 hud.inventory,Inventory,Inventario
+reaction.vaporization,Vaporization,Vaporización
+reaction.freezing,Freezing,Congelación

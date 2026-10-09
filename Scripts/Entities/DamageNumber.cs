@@ -26,6 +26,18 @@ public partial class DamageNumber : Node2D
         }
     }
 
+    public void InitializeReaction(string reactionName, float reactionDamage)
+    {
+        ZIndex = 10;
+        _label = GetNode<Label>("Label");
+        _label.Text = reactionDamage >= 1f
+            ? $"{reactionName}\n{Mathf.Round(reactionDamage)}"
+            : reactionName;
+        _label.Position = new Vector2(-65f, -12f);
+        _label.Size = new Vector2(130f, 48f);
+        _label.AddThemeColorOverride("font_color", new Color(1f, 1f, 1f));
+    }
+
     public override void _Process(double delta)
     {
         _timer += (float)delta;

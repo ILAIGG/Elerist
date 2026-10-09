@@ -49,4 +49,16 @@ public static class DamageNumberSystem
         //Se lo agrega al contenedor de proyectiles para que esté en el mundo
         tree.Root.FindChild("Projectiles", true, false)?.AddChild(number);
     }
+
+    public static void SpawnReaction(SceneTree tree, Vector2 position, string reactionName, float reactionDamage)
+    {
+        if (_scene == null) return;
+
+        DamageNumber number = _scene.Instantiate<DamageNumber>();
+        float offsetX = (float)GD.RandRange(-15, 15);
+        number.Position = position + new Vector2(offsetX, 0);
+        number.InitializeReaction(reactionName, reactionDamage);
+
+        tree.Root.FindChild("Projectiles", true, false)?.AddChild(number);
+    }
 }

@@ -105,9 +105,9 @@ public partial class EnemySpawner : Node
         float nodeDifficulty = GameManager.Instance.ActiveNodeDifficulty;
 
         //Se aplica el multiplicador del nodo sobre el escalado progresivo
-        float healthMultiplier = nodeDifficulty + (_difficultyLevel * 0.2f);
+        float healthMultiplier = 1.0f + ((nodeDifficulty - 1.0f) * 0.5f) + (_difficultyLevel * 0.08f);
         // Reducimos el impacto de la dificultad del mapa sobre la velocidad
-        float speedMultiplier = 1.0f + ((nodeDifficulty - 1.0f) * 0.5f) + (_difficultyLevel * 0.01f);
+        float speedMultiplier = 1.0f + ((nodeDifficulty - 1.0f) * 0.2f) + (_difficultyLevel * 0.005f);
 
         enemy.ScaleStats(healthMultiplier, speedMultiplier);
     }

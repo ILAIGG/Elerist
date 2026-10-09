@@ -94,6 +94,8 @@ public partial class GameManager : Node
 
         ActiveSave.MapNodes = RunMapGenerator.Generate(ActiveSave.MapSeed);
         ActiveSave.MapVersion = RunMapGenerator.CurrentMapVersion;
+        ActiveSave.CompletedNodes = Array.Empty<int>();
+        ActiveSave.CurrentNodeId = -1;
         SaveGame();
     }
 

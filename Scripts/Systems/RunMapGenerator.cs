@@ -3,8 +3,8 @@ using System.Collections.Generic;
 
 public static class RunMapGenerator
 {
-    public const int CurrentMapVersion = 4;
-    private const int LayerCount = 5;
+    public const int CurrentMapVersion = 6;
+    private const int LayerCount = 3;
     private const int MinimumNodesPerLayer = 2;
     private const int MaximumNodesPerLayer = 3;
     private const int TutorialNodeId = 0;
@@ -14,6 +14,7 @@ public static class RunMapGenerator
     {
         Random random = new(seed);
         LevelDefinition[] levels = LevelCatalog.GetWorldLevels(LevelCatalog.ForestWorldId);
+        LevelDefinition finalLevel = LevelCatalog.GetLevel("Forest_BossBattle");
         List<RunMapNode> nodes = new()
         {
             new RunMapNode
@@ -42,9 +43,12 @@ public static class RunMapGenerator
 
             for (int position = 0; position < nodeCount; position++)
             {
-                LevelDefinition level = levels[random.Next(levels.Length)];
-                float layerDifficulty = 1.0f + (layer * 0.25f);
-                float levelAdjustment = (level.BaseDifficulty - 1.0f) * 0.1f;
+                bool isFinal = layer == LayerCount;
+                LevelDefinition level = isFinal
+                    ? finalLevel
+                    : levels[random.Next(levels.Length)];
+                float layerDifficulty = 1.0f + (layer * 0.08f);
+                float levelAdjustment = (level.BaseDifficulty - 1.0f) * 0.05f;
                 float variation = (float)(random.NextDouble() * 0.04 - 0.02);
 
                 RunMapNode node = new()
@@ -55,7 +59,7 @@ public static class RunMapGenerator
                     LevelId = level.Id,
                     DisplayName = level.DisplayName,
                     DifficultyMultiplier = MathF.Max(1.0f, layerDifficulty + levelAdjustment + variation),
-                    IsFinal = layer == LayerCount
+                    IsFinal = isFinal
                 };
 
                 currentLayer.Add(node);
