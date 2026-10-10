@@ -7,8 +7,9 @@
 [ext_resource type="TileSet" uid="uid://ddi1a4dgycg4a" path="res://Assets/Tilesets/Terrain.tres" id="5_yd023"]
 [ext_resource type="PackedScene" uid="uid://4ktcx0v2mc1x" path="res://Scenes/World/WorldBounds.tscn" id="6_8y7l1"]
 [ext_resource type="Script" uid="uid://dnqi7x31tikbu" path="res://Scripts/Systems/EnemySpawner.cs" id="7_3erbh"]
-[ext_resource type="PackedScene" uid="uid://bmsfw8siu6wpu" path="res://Scenes/Entities/Enemy.tscn" id="8_isej8"]
-[ext_resource type="PackedScene" path="res://Scenes/Entities/FlyingEnemy.tscn" id="9_vl5ol"]
+[ext_resource type="PackedScene" path="res://Scenes/Entities/Nightmare.tscn" id="8_nightmare"]
+[ext_resource type="PackedScene" path="res://Scenes/Entities/RangeNightmare.tscn" id="9_range_nightmare"]
+[ext_resource type="PackedScene" path="res://Scenes/Entities/FlyingNightmare.tscn" id="10_flying_nightmare"]
 [ext_resource type="Script" uid="uid://ep3hviiql5it" path="res://Scripts/Systems/KillBossCondition.cs" id="10_mk7y3"]
 [ext_resource type="Script" uid="uid://dn5h6ntvx8ney" path="res://Scripts/Systems/SurviveTimeCondition.cs" id="11_8inv6"]
 [ext_resource type="PackedScene" uid="uid://bhs8rrtrjpiyt" path="res://Scenes/Entities/Player.tscn" id="12_hcvlv"]
@@ -46,8 +47,9 @@ collision_layer = 8
 
 [node name="EnemySpawner" type="Node" parent="." unique_id=71016853]
 script = ExtResource("7_3erbh")
-EnemyScene = ExtResource("8_isej8")
-FlyingEnemyScene = ExtResource("9_vl5ol")
+NightmareScene = ExtResource("8_nightmare")
+RangeNightmareScene = ExtResource("9_range_nightmare")
+FlyingNightmareScene = ExtResource("10_flying_nightmare")
 SpawnRadius = 800.0
 
 [node name="KillBossCondition" type="Node" parent="." unique_id=939733064]

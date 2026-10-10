@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://v6m40ewdymys"]
+
+[ext_resource type="PackedScene" uid="uid://bmsfw8siu6wpu" path="res://Scenes/Entities/Enemy.tscn" id="1_enemy"]
+[ext_resource type="Texture2D" uid="uid://dhr3acnkmvjwa" path="res://Assets/Sprites/flying_nightmare.png" id="2_texture"]
+
+[node name="FlyingNightmare" unique_id=1003736704 instance=ExtResource("1_enemy")]
+MovementMode = 1
+
+[node name="Sprite2D" parent="." index="1" unique_id=483857261]
+scale = Vector2(1, 1)
+texture = ExtResource("2_texture")

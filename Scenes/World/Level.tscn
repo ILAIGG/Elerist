@@ -7,7 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://4ktcx0v2mc1x" path="res://Scenes/World/WorldBounds.tscn" id="5_hencd"]
 [ext_resource type="Script" uid="uid://dnqi7x31tikbu" path="res://Scripts/Systems/EnemySpawner.cs" id="6_lg6u0"]
 [ext_resource type="TileSet" uid="uid://ddi1a4dgycg4a" path="res://Assets/Tilesets/Terrain.tres" id="6_u2ioh"]
-[ext_resource type="PackedScene" uid="uid://bmsfw8siu6wpu" path="res://Scenes/Entities/Enemy.tscn" id="7_ijlj7"]
+[ext_resource type="PackedScene" path="res://Scenes/Entities/Nightmare.tscn" id="7_nightmare"]
 [ext_resource type="PackedScene" uid="uid://bhs8rrtrjpiyt" path="res://Scenes/Entities/Player.tscn" id="8_dq7cm"]
 [ext_resource type="Script" uid="uid://ep3hviiql5it" path="res://Scripts/Systems/KillBossCondition.cs" id="8_p3yta"]
 [ext_resource type="Script" uid="uid://dn5h6ntvx8ney" path="res://Scripts/Systems/SurviveTimeCondition.cs" id="9_c0wbg"]
@@ -15,7 +15,8 @@
 [ext_resource type="PackedScene" uid="uid://co8afyiwlwo14" path="res://Scenes/UI/Defeat.tscn" id="10_dco46"]
 [ext_resource type="PackedScene" uid="uid://b73wajj7pvyso" path="res://Scenes/UI/UpgradeScreen.tscn" id="11_2l5nb"]
 [ext_resource type="PackedScene" uid="uid://dluvqrhtsjygh" path="res://Scenes/UI/Victory.tscn" id="12_i00xf"]
-[ext_resource type="PackedScene" path="res://Scenes/Entities/FlyingEnemy.tscn" id="13_flying"]
+[ext_resource type="PackedScene" path="res://Scenes/Entities/RangeNightmare.tscn" id="13_range_nightmare"]
+[ext_resource type="PackedScene" path="res://Scenes/Entities/FlyingNightmare.tscn" id="14_flying_nightmare"]
 
 [node name="Level" type="Node2D" unique_id=1536102581]
 script = ExtResource("1_7clbi")
@@ -44,8 +45,9 @@ collision_layer = 8
 
 [node name="EnemySpawner" type="Node" parent="." unique_id=71016853]
 script = ExtResource("6_lg6u0")
-EnemyScene = ExtResource("7_ijlj7")
-FlyingEnemyScene = ExtResource("13_flying")
+NightmareScene = ExtResource("7_nightmare")
+RangeNightmareScene = ExtResource("13_range_nightmare")
+FlyingNightmareScene = ExtResource("14_flying_nightmare")
 SpawnRadius = 800.0
 
 [node name="KillBossCondition" type="Node" parent="." unique_id=939733064]

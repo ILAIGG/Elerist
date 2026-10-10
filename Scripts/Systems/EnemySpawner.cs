@@ -3,11 +3,9 @@ using Godot;
 
 public partial class EnemySpawner : Node
 {
-    //La escena del enemigo que se va a instanciar
-    [Export] public PackedScene EnemyScene { get; set; }
-    [Export] public PackedScene FlyingEnemyScene { get; set; }
-
-    private const float FlyingEnemyChance = 0.3f;
+    [Export] public PackedScene NightmareScene { get; set; }
+    [Export] public PackedScene RangeNightmareScene { get; set; }
+    [Export] public PackedScene FlyingNightmareScene { get; set; }
 
     //Cada cuantos segundos aparece un enemigo al inicio
     [Export] public float SpawnInterval = 1.5f;
@@ -83,9 +81,12 @@ public partial class EnemySpawner : Node
 
     private void SpawnEnemy()
     {
-        PackedScene scene = FlyingEnemyScene != null && GD.Randf() < FlyingEnemyChance
-            ? FlyingEnemyScene
-            : EnemyScene;
+        float roll = GD.Randf();
+        PackedScene scene = roll < 0.5f
+            ? NightmareScene
+            : roll < 0.8f
+                ? RangeNightmareScene
+                : FlyingNightmareScene;
         Enemy enemy = scene.Instantiate<Enemy>();
 
         //Busca el contenedor de enemigos

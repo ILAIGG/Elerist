@@ -29,7 +29,6 @@ shape = SubResource("RectangleShape2D_2tapu")
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=313276052]
 texture_filter = 1
 position = Vector2(-5.9604645e-08, -5.9604645e-08)
-scale = Vector2(2, 2)
 texture = ExtResource("2_wmg1a")
 
 [node name="ArtCaster" type="Node" parent="." unique_id=857088393]
