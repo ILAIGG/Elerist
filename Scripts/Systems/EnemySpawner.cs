@@ -23,7 +23,7 @@ public partial class EnemySpawner : Node
     [Export] public float SpawnRadius = 700f;
 
     //Cada cuantos segundos aumenta la dificultad
-    [Export] public float DifficultyInterval = 20f;
+    [Export] public float DifficultyInterval = 10f;
     [Export] public int MaxEnemies = 80;
 
     public bool IsPaused = false;

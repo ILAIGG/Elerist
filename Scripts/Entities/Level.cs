@@ -5,8 +5,6 @@ public partial class Level : Node2D
 {
     [Export] public PackedScene DamageNumberScene { get; set; }
 
-    [Export] public PackedScene BossScene { get; set; }
-
     private bool _victoryAchieved = false;
 
     //Pausa
@@ -56,7 +54,16 @@ public partial class Level : Node2D
             _runCompleted.ProcessMode = Node.ProcessModeEnum.Always;
             GetNode<CanvasLayer>("UI").AddChild(_runCompleted);
 
-            SpawnBoss();
+            BossSpawner bossSpawner = GetNodeOrNull<BossSpawner>("BossSpawner");
+            if (bossSpawner != null)
+            {
+                EnemySpawner enemySpawner = GetNodeOrNull<EnemySpawner>("EnemySpawner");
+                if (enemySpawner != null)
+                    enemySpawner.IsPaused = true;
+
+                bossSpawner.SpawnBoss();
+                _killBossCondition?.NotifyBossSpawned();
+            }
         }
 
         //Inicializa el objetivo en el HUD
@@ -112,77 +119,6 @@ public partial class Level : Node2D
                 return;
             }
         }
-    }
-
-    private void SpawnBoss()
-    {
-        EnemySpawner spawner = GetTree().Root.FindChild("EnemySpawner", true, false) as EnemySpawner;
-        if (spawner != null)
-            spawner.IsPaused = true;
-
-        Node enemyContainer = GetTree().Root.FindChild("Enemies", true, false);
-        Boss boss = BossScene.Instantiate<Boss>();
-        enemyContainer.AddChild(boss);
-
-        //El jefe aparece a 700 píxeles del jugador, buscando una posición libre y dentro de los límites
-        Player player = GetTree().GetFirstNodeInGroup("player") as Player;
-        if (player != null)
-        {
-            boss.GlobalPosition = GetBossSpawnPosition(player);
-        }
-
-        // Notifica a la condición que el jefe apareció
-        _killBossCondition?.NotifyBossSpawned();
-    }
-
-    private Vector2 GetBossSpawnPosition(Player player)
-    {
-        float spawnRadius = 700f;
-        Vector2 spawnPos = player.GlobalPosition + new Vector2(spawnRadius, 0); // Posición por defecto a la derecha
-        bool positionFound = false;
-
-        // Obtenemos el estado de las físicas del mundo para revisar colisiones
-        var spaceState = player.GetWorld2D().DirectSpaceState;
-
-        // Intentamos hasta 30 veces encontrar una posición válida
-        for (int i = 0; i < 30; i++)
-        {
-            // El primer intento es directamente a la derecha, los demás son con ángulos aleatorios
-            float angle = (i == 0) ? 0f : (float)GD.RandRange(0, Mathf.Tau);
-            Vector2 offset = new(Mathf.Cos(angle) * spawnRadius, Mathf.Sin(angle) * spawnRadius);
-            Vector2 candidatePos = player.GlobalPosition + offset;
-
-            // Se limita la posición de forma lógica dentro del mapa (de -2400 a 2400)
-            if (candidatePos.X >= -2400f && candidatePos.X <= 2400f && candidatePos.Y >= -2400f && candidatePos.Y <= 2400f)
-            {
-                // Consulta de física para comprobar colisión
-                var query = new PhysicsPointQueryParameters2D
-                {
-                    Position = candidatePos
-                };
-
-                var result = spaceState.IntersectPoint(query);
-                if (result.Count == 0)
-                {
-                    spawnPos = candidatePos;
-                    positionFound = true;
-                    break;
-                }
-            }
-        }
-
-        // Si no se encuentra posición libre tras 30 intentos, forzamos un spawn hacia el centro del mapa
-        if (!positionFound)
-        {
-            Vector2 dirToCenter = (Vector2.Zero - player.GlobalPosition).Normalized();
-            spawnPos = player.GlobalPosition + (dirToCenter * spawnRadius);
-
-            // Aseguramos límites
-            spawnPos.X = Mathf.Clamp(spawnPos.X, -2400f, 2400f);
-            spawnPos.Y = Mathf.Clamp(spawnPos.Y, -2400f, 2400f);
-        }
-
-        return spawnPos;
     }
 
     private void OnVictory()

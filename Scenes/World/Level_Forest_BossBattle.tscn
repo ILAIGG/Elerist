@@ -2,14 +2,15 @@
 
 [ext_resource type="Script" uid="uid://dix04qd22kpw7" path="res://Scripts/Entities/Level.cs" id="1_17ieo"]
 [ext_resource type="PackedScene" uid="uid://bth3wwe172qnu" path="res://Scenes/Entities/DamageNumber.tscn" id="2_16tq6"]
-[ext_resource type="PackedScene" uid="uid://b41k10rumb8le" path="res://Scenes/Entities/Boss.tscn" id="3_r2n7y"]
+[ext_resource type="PackedScene" uid="uid://b41k10rumb8le" path="res://Scenes/Entities/Boss.tscn" id="3_boss"]
+[ext_resource type="Script" uid="uid://dd3jpelf88erd" path="res://Scripts/Entities/BossSpawner.cs" id="3_boss_spawner"]
 [ext_resource type="Script" uid="uid://d1h6xn1rvwjcq" path="res://Scripts/Entities/Background.cs" id="4_ofqn4"]
 [ext_resource type="TileSet" uid="uid://ddi1a4dgycg4a" path="res://Assets/Tilesets/Terrain.tres" id="5_yd023"]
 [ext_resource type="PackedScene" uid="uid://4ktcx0v2mc1x" path="res://Scenes/World/WorldBounds.tscn" id="6_8y7l1"]
 [ext_resource type="Script" uid="uid://dnqi7x31tikbu" path="res://Scripts/Systems/EnemySpawner.cs" id="7_3erbh"]
-[ext_resource type="PackedScene" path="res://Scenes/Entities/Nightmare.tscn" id="8_nightmare"]
-[ext_resource type="PackedScene" path="res://Scenes/Entities/RangeNightmare.tscn" id="9_range_nightmare"]
-[ext_resource type="PackedScene" path="res://Scenes/Entities/FlyingNightmare.tscn" id="10_flying_nightmare"]
+[ext_resource type="PackedScene" uid="uid://un33a6dr2ee8" path="res://Scenes/Entities/Nightmare.tscn" id="8_nightmare"]
+[ext_resource type="PackedScene" uid="uid://bfgkdcylkp6ep" path="res://Scenes/Entities/RangeNightmare.tscn" id="9_range_nightmare"]
+[ext_resource type="PackedScene" uid="uid://v6m40ewdymys" path="res://Scenes/Entities/FlyingNightmare.tscn" id="10_flying_nightmare"]
 [ext_resource type="Script" uid="uid://ep3hviiql5it" path="res://Scripts/Systems/KillBossCondition.cs" id="10_mk7y3"]
 [ext_resource type="Script" uid="uid://dn5h6ntvx8ney" path="res://Scripts/Systems/SurviveTimeCondition.cs" id="11_8inv6"]
 [ext_resource type="PackedScene" uid="uid://bhs8rrtrjpiyt" path="res://Scenes/Entities/Player.tscn" id="12_hcvlv"]
@@ -21,7 +22,6 @@
 [node name="Level" type="Node2D" unique_id=1536102581]
 script = ExtResource("1_17ieo")
 DamageNumberScene = ExtResource("2_16tq6")
-BossScene = ExtResource("3_r2n7y")
 
 [node name="Background" type="Node2D" parent="." unique_id=744452641]
 visible = false
@@ -44,6 +44,11 @@ collision_layer = 8
 [node name="Projectiles" type="Node2D" parent="." unique_id=1954467565]
 
 [node name="Enemies" type="Node2D" parent="." unique_id=98136928]
+
+[node name="BossSpawner" type="Node2D" parent="." unique_id=1471391644]
+position = Vector2(0, -303)
+script = ExtResource("3_boss_spawner")
+BossScene = ExtResource("3_boss")
 
 [node name="EnemySpawner" type="Node" parent="." unique_id=71016853]
 script = ExtResource("7_3erbh")

@@ -2,7 +2,6 @@
 
 [ext_resource type="Script" uid="uid://dix04qd22kpw7" path="res://Scripts/Entities/Level.cs" id="1_7clbi"]
 [ext_resource type="PackedScene" uid="uid://bth3wwe172qnu" path="res://Scenes/Entities/DamageNumber.tscn" id="2_p3yta"]
-[ext_resource type="PackedScene" uid="uid://b41k10rumb8le" path="res://Scenes/Entities/Boss.tscn" id="3_c0wbg"]
 [ext_resource type="Script" uid="uid://d1h6xn1rvwjcq" path="res://Scripts/Entities/Background.cs" id="4_u2ioh"]
 [ext_resource type="PackedScene" uid="uid://4ktcx0v2mc1x" path="res://Scenes/World/WorldBounds.tscn" id="5_hencd"]
 [ext_resource type="Script" uid="uid://dnqi7x31tikbu" path="res://Scripts/Systems/EnemySpawner.cs" id="6_lg6u0"]
@@ -21,7 +20,6 @@
 [node name="Level" type="Node2D" unique_id=1536102581]
 script = ExtResource("1_7clbi")
 DamageNumberScene = ExtResource("2_p3yta")
-BossScene = ExtResource("3_c0wbg")
 
 [node name="Background" type="Node2D" parent="." unique_id=744452641]
 visible = false
