@@ -1,4 +1,5 @@
 using Godot;
+using System.Collections.Generic;
 
 public partial class Boss : CharacterBody2D, IEnemy
 {
@@ -19,6 +20,16 @@ public partial class Boss : CharacterBody2D, IEnemy
     private const float DashSpeed = 840f;
     private const float DashDuration = DashLength / DashSpeed;
     private const int DashDirectionChangeCount = 2;
+    private const int DashesBeforeMeteorShower = 4;
+    private const float MeteorShowerDuration = 10f;
+    private const float MeteorMarkerDuration = 1f;
+    private const int MeteorWaveCount = 3;
+    private const int MeteorCount = 30;
+    private const float MeteorAreaRadius = 1000f;
+    private const float MeteorMarkerSize = 108f;
+    private const float MeteorMarkerSpacing = MeteorMarkerSize + 12f;
+    private const float PlayerTargetJitter = 8f;
+    public const string MeteorShowerAbilityName = "Meteor shower";
 
     private Sprite2D _sprite;
     private Sprite2D _reactionSprite;
@@ -31,8 +42,24 @@ public partial class Boss : CharacterBody2D, IEnemy
     private float _dashChargeTimer;
     private float _dashTimer;
     private int _dashDirectionChangeCount;
+    private int _completedDashCount;
     private bool _isChargingDash;
     private bool _isDashing;
+    private bool _isReturningToCenter;
+    private bool _isMeteorShower;
+    private float _meteorShowerTimer;
+    private int _nextMeteorWaveIndex;
+    private List<Vector2> _meteorTargets = new();
+    private readonly List<MeteorMarker> _activeMeteorMarkers = new();
+    private RandomNumberGenerator _random = new();
+
+    private sealed class MeteorMarker
+    {
+        public Node2D Root;
+        public Polygon2D Fill;
+        public Vector2 Position;
+        public float Timer;
+    }
 
     public HealthSystem Health { get; private set; }
     public ElementalAccumulator ElementalEffects { get; } = new();
@@ -72,6 +99,7 @@ public partial class Boss : CharacterBody2D, IEnemy
         }
 
         AddToGroup("boss");
+        _random.Randomize();
         CreateDashIndicator();
         _player = GetTree().GetFirstNodeInGroup("player") as Player;
     }
@@ -86,6 +114,18 @@ public partial class Boss : CharacterBody2D, IEnemy
 
         float frameDelta = (float)delta;
         _dashCooldown = Mathf.Max(0f, _dashCooldown - frameDelta);
+
+        if (_isReturningToCenter)
+        {
+            UpdateReturnToCenter();
+            return;
+        }
+
+        if (_isMeteorShower)
+        {
+            UpdateMeteorShower(frameDelta);
+            return;
+        }
 
         if (_isChargingDash)
         {
@@ -327,6 +367,13 @@ public partial class Boss : CharacterBody2D, IEnemy
         _isDashing = false;
         Velocity = Vector2.Zero;
         DamageDashArea();
+        _completedDashCount++;
+
+        if (_completedDashCount >= DashesBeforeMeteorShower)
+        {
+            _isReturningToCenter = true;
+            _knockbackVelocity = Vector2.Zero;
+        }
     }
 
     private void UpdateDashFill(float progress)
@@ -343,15 +390,194 @@ public partial class Boss : CharacterBody2D, IEnemy
 
     private void DamageDashArea()
     {
+        Vector2 areaCenter = _dashOrigin + _dashDirection * (DashLength / 2f);
+        DamageArea(areaCenter, new Vector2(DashLength, DashWidth), _dashDirection.Angle());
+    }
+
+    private void UpdateReturnToCenter()
+    {
+        Vector2 direction = -GlobalPosition;
+        if (direction.Length() <= 12f)
+        {
+            GlobalPosition = Vector2.Zero;
+            Velocity = Vector2.Zero;
+            _isReturningToCenter = false;
+            BeginMeteorShower();
+            return;
+        }
+
+        direction = direction.Normalized();
+        if (direction.X != 0)
+            _sprite.FlipH = direction.X < 0;
+
+        Velocity = direction * Speed;
+        MoveAndSlide();
+    }
+
+    private void BeginMeteorShower()
+    {
+        _isMeteorShower = true;
+        _meteorShowerTimer = 0f;
+        _nextMeteorWaveIndex = 0;
+        _activeMeteorMarkers.Clear();
+        Velocity = Vector2.Zero;
+    }
+
+    private void UpdateMeteorShower(float delta)
+    {
+        Velocity = Vector2.Zero;
+        _knockbackVelocity = Vector2.Zero;
+        _meteorShowerTimer += delta;
+
+        float waveInterval = (MeteorShowerDuration - MeteorMarkerDuration) / (MeteorWaveCount - 1f);
+        while (_nextMeteorWaveIndex < MeteorWaveCount
+            && _meteorShowerTimer >= _nextMeteorWaveIndex * waveInterval)
+        {
+            _meteorTargets = GenerateMeteorTargets();
+            foreach (Vector2 target in _meteorTargets)
+                CreateMeteorMarker(target);
+            _nextMeteorWaveIndex++;
+        }
+
+        for (int i = _activeMeteorMarkers.Count - 1; i >= 0; i--)
+        {
+            MeteorMarker marker = _activeMeteorMarkers[i];
+            marker.Timer += delta;
+            UpdateMeteorMarkerVisual(marker);
+
+            if (marker.Timer < MeteorMarkerDuration)
+                continue;
+
+            DamageCircleArea(marker.Position, MeteorMarkerSize / 2f);
+            marker.Root.QueueFree();
+            _activeMeteorMarkers.RemoveAt(i);
+        }
+
+        if (_meteorShowerTimer < MeteorShowerDuration || _activeMeteorMarkers.Count > 0)
+            return;
+
+        _isMeteorShower = false;
+        _completedDashCount = 0;
+        _dashCooldown = DashCooldown;
+    }
+
+    private List<Vector2> GenerateMeteorTargets()
+    {
+        var targets = new List<Vector2>(MeteorCount);
+        if (_random.Randf() <= 0.7f)
+        {
+            Vector2 jitter = new(
+                _random.RandfRange(-PlayerTargetJitter, PlayerTargetJitter),
+                _random.RandfRange(-PlayerTargetJitter, PlayerTargetJitter));
+            Vector2 target = _player.GlobalPosition + jitter;
+            Vector2 fromBoss = target - GlobalPosition;
+            if (fromBoss.Length() > MeteorAreaRadius - MeteorMarkerSize / 2f)
+                target = GlobalPosition + fromBoss.Normalized() * (MeteorAreaRadius - MeteorMarkerSize / 2f);
+            if (CanAddMeteorTarget(target, targets))
+                targets.Add(target);
+        }
+
+        int attempts = 0;
+        while (targets.Count < MeteorCount && attempts < 5000)
+        {
+            attempts++;
+            float angle = _random.RandfRange(0f, Mathf.Tau);
+            float distance = Mathf.Sqrt(_random.Randf()) * (MeteorAreaRadius - MeteorMarkerSize / 2f);
+            Vector2 target = GlobalPosition + new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * distance;
+            if (CanAddMeteorTarget(target, targets))
+                targets.Add(target);
+        }
+
+        return targets;
+    }
+
+    private bool CanAddMeteorTarget(Vector2 target, List<Vector2> existingTargets)
+    {
+        foreach (Vector2 existingTarget in existingTargets)
+        {
+            Vector2 separation = (target - existingTarget).Abs();
+            if (separation.X < MeteorMarkerSpacing && separation.Y < MeteorMarkerSpacing)
+                return false;
+        }
+
+        return true;
+    }
+
+    private void CreateMeteorMarker(Vector2 position)
+    {
+        var root = new Node2D
+        {
+            Name = "MeteorShowerMarker",
+            ZIndex = 2
+        };
+        AddChild(root);
+        root.GlobalPosition = position;
+
+        var baseArea = new Polygon2D
+        {
+            Polygon = CreateCirclePolygon(MeteorMarkerSize / 2f),
+            Color = new Color(0.95f, 0.08f, 0.08f, 0.25f)
+        };
+        root.AddChild(baseArea);
+
+        var fill = new Polygon2D
+        {
+            Color = new Color(1f, 0.04f, 0.04f, 0.65f)
+        };
+        root.AddChild(fill);
+
+        var marker = new MeteorMarker
+        {
+            Root = root,
+            Fill = fill,
+            Position = position
+        };
+        _activeMeteorMarkers.Add(marker);
+    }
+
+    private static Vector2[] CreateCirclePolygon(float radius)
+    {
+        const int segmentCount = 32;
+        var points = new Vector2[segmentCount];
+        for (int i = 0; i < points.Length; i++)
+        {
+            float angle = Mathf.Tau * i / points.Length;
+            points[i] = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * radius;
+        }
+
+        return points;
+    }
+
+    private void UpdateMeteorMarkerVisual(MeteorMarker marker)
+    {
+        float progress = Mathf.Clamp(marker.Timer / MeteorMarkerDuration, 0f, 1f);
+        marker.Fill.Polygon = CreateCirclePolygon(MeteorMarkerSize / 2f * progress);
+    }
+
+    private void DamageArea(Vector2 areaCenter, Vector2 areaSize, float rotation)
+    {
         var shape = new RectangleShape2D
         {
-            Size = new Vector2(DashLength, DashWidth)
+            Size = areaSize
         };
-        Vector2 areaCenter = _dashOrigin + _dashDirection * (DashLength / 2f);
+        ApplyDamageQuery(shape, new Transform2D(rotation, areaCenter));
+    }
+
+    private void DamageCircleArea(Vector2 areaCenter, float radius)
+    {
+        var shape = new CircleShape2D
+        {
+            Radius = radius
+        };
+        ApplyDamageQuery(shape, new Transform2D(0f, areaCenter));
+    }
+
+    private void ApplyDamageQuery(Shape2D shape, Transform2D transform)
+    {
         var query = new PhysicsShapeQueryParameters2D
         {
             Shape = shape,
-            Transform = new Transform2D(_dashDirection.Angle(), areaCenter),
+            Transform = transform,
             CollisionMask = 1,
             CollideWithAreas = false,
             CollideWithBodies = true
