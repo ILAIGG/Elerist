@@ -185,4 +185,4 @@ offset_top = -23.0
 offset_right = 500.0
 grow_vertical = 0
 theme_override_colors/font_color = Color(0.7528677, 0.5179158, 0.98803645, 0.45800003)
-text = "Elerist v0.6.1 (LevelUp Prototipe 10-26)"
+text = "Elerist v0.6.1 (LevelUp Prototype 10-26)"
