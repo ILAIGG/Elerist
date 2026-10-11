@@ -111,6 +111,7 @@ public partial class EnemySpawner : Node
         float speedMultiplier = 1.0f + ((nodeDifficulty - 1.0f) * 0.2f) + (_difficultyLevel * 0.005f);
 
         enemy.ScaleStats(healthMultiplier, speedMultiplier);
+        enemy.SetClassificationDifficulty(_difficultyLevel, nodeDifficulty);
     }
 
     private Vector2 GetSpawnPosition()

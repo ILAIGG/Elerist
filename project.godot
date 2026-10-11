@@ -10,7 +10,7 @@ config_version=5
 
 [application]
 
-config/name="Elerist"
+config/name="Elerist (LevelUp Event)"
 config/version="0.3.0"
 run/main_scene="uid://b8q2hnprib8b8"
 config/features=PackedStringArray("4.7", "C#", "GL Compatibility")
@@ -25,6 +25,7 @@ buses/default_bus_layout="uid://ce33l64rtxlum"
 GameManager="*uid://d6tdk0eivkee"
 LocalizationManager="*res://Scripts/Systems/LocalizationManager.cs"
 AudioManager="*uid://cbe2oo7wpmypv"
+ClassificationManager="*res://Scripts/Systems/ClassificationManager.cs"
 
 [dotnet]
 

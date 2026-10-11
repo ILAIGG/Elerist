@@ -266,7 +266,16 @@ public partial class Player : CharacterBody2D
 
     private void OnPlayerDeath()
     {
-        //Se busca la pantalla de Game Over y se la muestra
+        const string classificationScene = "res://Scenes/UI/Classification.tscn";
+        Node classificationManager = GetNodeOrNull<Node>("/root/ClassificationManager");
+        if (classificationManager != null && ResourceLoader.Exists(classificationScene))
+        {
+            classificationManager.Call("FinishRun");
+            GetTree().Paused = false;
+            GetTree().ChangeSceneToFile(classificationScene);
+            return;
+        }
+
         Defeat defeat = GetTree().Root.FindChild("Defeat", true, false) as Defeat;
         defeat?.ShowDefeat();
     }

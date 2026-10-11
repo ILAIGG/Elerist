@@ -4,6 +4,7 @@ menu.new_game,Start A New Game,Nueva partida
 menu.continue,Continue,Continuar
 menu.quit,Quit,Salir
 menu.settings,Settings,Configuración
+menu.classification,Score,Puntuación
 menu.language,Language,Idioma
 menu.version,Elerist v0.3.0 (Journey Update - Part I),Elerist v0.3.0 (Actualización del viaje - Parte I)
 common.cancel,Cancel,Cancelar
@@ -32,6 +33,16 @@ screen.run_completed,Run Completed,Partida completada
 screen.run_completed_message,You completed the run.,Has completado la partida.
 screen.new_save,Enter your save name,Introduce el nombre de tu partida
 screen.save_name_placeholder,Save name...,Nombre de la partida...
+classification.title,Classification,Clasificación
+classification.rank,Rank,Puesto
+classification.player,Player,Jugador
+classification.score,Score,Puntuación
+classification.result,Run score: {0},Puntuación de la partida: {0}
+classification.empty,No scores recorded yet.,Aún no hay puntuaciones registradas.
+classification.player_name,Enter your name,Escribe tu nombre
+classification.name_placeholder,Player name...,Nombre del jugador...
+classification.default_name,Player,Jugador
+classification.return_to_menu,Back to menu,Volver al menú
 screen.current_run,Current Run,Partida actual
 screen.play_time,Play time: {0}h {1}m {2}s,Tiempo de juego: {0}h {1}m {2}s
 tutorial.step0,Welcome to Elerist! Move with W - A - S - D or the arrow keys.,¡Te damos la bienvenida a Elerist! Muévete con W - A - S - D o las flechas.

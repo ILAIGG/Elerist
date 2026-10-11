@@ -125,6 +125,7 @@ public partial class Level : Node2D
     {
         // Marca el nodo como completado en el GameManager
         GameManager.Instance.CompleteNode(GameManager.Instance.ActiveNodeId);
+        GetNodeOrNull<Node>("/root/ClassificationManager")?.Call("AddCompletedNodeScore", GameManager.Instance.ActiveNodeDifficulty);
 
         Player player = GetTree().GetFirstNodeInGroup("player") as Player;
         if (player != null)
@@ -135,6 +136,9 @@ public partial class Level : Node2D
         if (GameManager.Instance.ActiveNodeIsFinal)
             GameManager.Instance.CompleteRun();
 
+        if (GameManager.Instance.ActiveNodeIsFinal && ShowClassificationResults())
+            return;
+
         if (GameManager.Instance.ActiveNodeIsFinal)
             _runCompleted?.ShowRunCompleted();
         else
@@ -142,6 +146,19 @@ public partial class Level : Node2D
             Victory victory = GetTree().Root.FindChild("Victory", true, false) as Victory;
             victory?.ShowVictory();
         }
+    }
+
+    private bool ShowClassificationResults()
+    {
+        const string scenePath = "res://Scenes/UI/Classification.tscn";
+        Node classificationManager = GetNodeOrNull<Node>("/root/ClassificationManager");
+        if (classificationManager == null || !ResourceLoader.Exists(scenePath))
+            return false;
+
+        classificationManager.Call("FinishRun");
+        GetTree().Paused = false;
+        GetTree().ChangeSceneToFile(scenePath);
+        return true;
     }
 
     public override void _Input(InputEvent @event)

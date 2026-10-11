@@ -29,6 +29,8 @@ public partial class Enemy : CharacterBody2D, IEnemy
     [Export] public float RangedAttackInterval = 1.5f;
     [Export] public float RangedProjectileSpeed = 260f;
     [Export] public PackedScene RangedProjectileScene { get; set; }
+    public int ClassificationDifficultyLevel { get; private set; }
+    public float ClassificationNodeDifficulty { get; private set; } = 1f;
 
     private Sprite2D _sprite;
     private Sprite2D _reactionSprite;
@@ -40,6 +42,12 @@ public partial class Enemy : CharacterBody2D, IEnemy
 
     //La XP que da este enemigo al morir. Se usa MaxHealth como base para que los enemigos más fuertes den aún más XP automáticamente.
     public float XPValue => 10 * (MaxHealth / 30f);
+
+    public void SetClassificationDifficulty(int difficultyLevel, float nodeDifficulty)
+    {
+        ClassificationDifficultyLevel = difficultyLevel;
+        ClassificationNodeDifficulty = nodeDifficulty;
+    }
 
     public HealthSystem Health { get; private set; }
     public ElementalAccumulator ElementalEffects { get; } = new();
@@ -279,6 +287,7 @@ public partial class Enemy : CharacterBody2D, IEnemy
     {
         //Se le da experiencia al jugador antes de eliminar al enemigo
         _player?.Experience.AddXP(XPValue); //Esto es lo mismo que hacer: "if (_player != null) _player.Experience.AddXP(XPValue);" El "?" hace que diga "Existe el jugador? Si existe, entonces haz esto".
+        GetNodeOrNull<Node>("/root/ClassificationManager")?.Call("AddEnemyScore", ClassificationDifficultyLevel, ClassificationNodeDifficulty);
 
         QueueFree();
     }

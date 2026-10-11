@@ -592,6 +592,7 @@ public partial class Boss : CharacterBody2D, IEnemy
 
     private void OnBossDeath()
     {
+        GetNodeOrNull<Node>("/root/ClassificationManager")?.Call("AddBossScore", GameManager.Instance.ActiveNodeDifficulty);
         GetTree().Root.FindChild("Level", true, false)
             ?.Call("OnBossDefeated");
 

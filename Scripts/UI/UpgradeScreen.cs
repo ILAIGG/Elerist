@@ -38,6 +38,7 @@ public partial class UpgradeScreen : Control
 
     private void OnUpgradeChosen(Upgrade upgrade)
     {
+        GetNodeOrNull<Node>("/root/ClassificationManager")?.Call("AddCardScore");
         _player.Upgrades.ApplyUpgrade(upgrade);
 
         Visible = false;
