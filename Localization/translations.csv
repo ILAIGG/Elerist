@@ -105,7 +105,7 @@ upgrade.frost_ray_wide.name,Wide Beam,Rayo amplio
 upgrade.frost_ray_chain.name,Chaining Frost,Hielo encadenado
 upgrade.frost_ray_slow_duration.name,Lingering Chill,Frío persistente
 upgrade.unlock_repulsion_burst.name,Repulsion Burst,Estallido de repulsión
-upgrade.repulsion_burst_damage.name,Terrain Repulsion,Repulsión terrestre
+upgrade.repulsion_burst_damage.name,Repulsion Damage,Daño de repulsión
 upgrade.repulsion_burst_shockwave.name,Shockwave,Onda expansiva
 upgrade.repulsion_burst_extended.name,Extended Burst,Estallido ampliado
 upgrade.nova_chain.name,Nova Chain,Cadena de nova
@@ -132,7 +132,7 @@ upgrade.frost_ray_chain.description,Frost Ray bounces to the nearest enemy after
 upgrade.frost_ray_slow_duration.description,+1s Frost Ray slow duration.,+1 s de duración de ralentización del Rayo de hielo.
 upgrade.frost_ray_slow_duration.freeze_description,+0.5s Frost Ray freeze duration.,+0.5 s de duración de congelación del Rayo de hielo.
 upgrade.unlock_repulsion_burst.description,Periodically releases a burst that pushes nearby enemies away. Triggers every {0:F1} seconds.,Libera periódicamente un estallido que repele a los enemigos cercanos. Se activa cada {0:F1} segundos.
-upgrade.repulsion_burst_damage.description,+2 Repulsion Burst damage (Current: {0:F2}s).,+2 de daño del Estallido de repulsión (actual: {0:F2} s).
+upgrade.repulsion_burst_damage.description,+2 Repulsion Burst damage (Current: {0:F2}).,+2 de daño del Estallido de repulsión (actual: {0:F2}).
 upgrade.repulsion_burst_shockwave.description,Repulsion Burst leaves a damaging shockwave.,El Estallido de repulsión deja una onda expansiva dañina.
 upgrade.repulsion_burst_extended.description,Increase Repulsion Burst range and push force.,Aumenta el alcance y la fuerza de empuje del Estallido de repulsión.
 upgrade.nova_chain.description,Fire Nova launches Fireballs when detonating.,La Nova de fuego lanza Bolas de fuego al detonar.
