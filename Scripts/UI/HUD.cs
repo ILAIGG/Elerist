@@ -14,6 +14,9 @@ public partial class HUD : CanvasLayer
     private Label _dashLabel;
     private Label _objectiveLabel;
     private Button _inventoryButton;
+    private Control _bossBar;
+    private ProgressBar _bossHealthBar;
+    private Label _bossHealthLabel;
 
     private Player _player;
     private InventoryScreen _inventoryScreen;
@@ -35,6 +38,9 @@ public partial class HUD : CanvasLayer
         _dashLabel = _contentContainer.GetNode<Label>("Cooldowns/DashLabel");
         _objectiveLabel = GetNode<Label>("Container/ObjectivePanel/Margin/ObjectiveLabel");
         _inventoryButton = GetNode<Button>("Container/InventoryButton");
+        _bossBar = GetNode<Control>("Container/BossHealthBar");
+        _bossHealthBar = GetNode<ProgressBar>("Container/BossHealthBar/HealthBar");
+        _bossHealthLabel = GetNode<Label>("Container/BossHealthBar/HealthLabel");
         _inventoryButton.Pressed += OnInventoryButtonPressed;
         _inventoryScreen = GetNode<InventoryScreen>("InventoryScreen");
 
@@ -65,11 +71,35 @@ public partial class HUD : CanvasLayer
 
     public override void _Process(double delta)
     {
+        UpdateBossBar();
+
         if (_player == null) return;
 
         _gameTime += (float)delta;
         UpdateTimeLabel();
         UpdateCooldownLabels();
+    }
+
+    private void UpdateBossBar()
+    {
+        Boss boss = GetTree().GetFirstNodeInGroup("boss") as Boss;
+        if (boss == null || !GodotObject.IsInstanceValid(boss))
+        {
+            _bossBar.Visible = false;
+            return;
+        }
+
+        _bossBar.Visible = true;
+        _bossHealthBar.MaxValue = boss.Health.MaxHealth;
+        _bossHealthBar.Value = boss.Health.CurrentHealth;
+        _bossHealthLabel.Text = $"{LocalizationManager.Translate("hud.boss")}  {Mathf.Round(boss.Health.CurrentHealth)} / {Mathf.Round(boss.Health.MaxHealth)}";
+
+        bool bossIsBelowPlayer = _player != null && boss.GlobalPosition.Y > _player.GlobalPosition.Y;
+        float verticalAnchor = bossIsBelowPlayer ? 0f : 1f;
+        _bossBar.AnchorTop = verticalAnchor;
+        _bossBar.AnchorBottom = verticalAnchor;
+        _bossBar.OffsetTop = bossIsBelowPlayer ? 24f : -54f;
+        _bossBar.OffsetBottom = bossIsBelowPlayer ? 50f : -28f;
     }
 
     //Llamado desde EnemySpawner cuando sube la dificultad

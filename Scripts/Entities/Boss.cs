@@ -1,4 +1,3 @@
-using System.Security.Cryptography.X509Certificates;
 using Godot;
 
 public partial class Boss : CharacterBody2D, IEnemy
@@ -7,20 +6,38 @@ public partial class Boss : CharacterBody2D, IEnemy
 
     [Export] public Element ElementType { get; set; } = Element.Neutral;
     [Export] public float Speed = 160f;
-    [Export] public float MaxHealth = 7000f;
+    [Export] public float MaxHealth = 5500f;
     [Export] public float ContactDamage = 80f;
     private float _damageCooldown = 0f;
 
     private const float DamageInterval = 0.5f;
+    private const float DashCooldown = 10f;
+    private const float DashChargeDuration = 2.5f;
+    private const float DashDirectionLockDuration = 0.5f;
+    private const float DashLength = 600f;
+    private const float DashWidth = 58f;
+    private const float DashSpeed = 840f;
+    private const float DashDuration = DashLength / DashSpeed;
+    private const int DashDirectionChangeCount = 2;
 
     private Sprite2D _sprite;
     private Sprite2D _reactionSprite;
+    private Node2D _dashIndicator;
+    private Polygon2D _dashFill;
+    private Vector2 _spriteOriginalPosition;
+    private Vector2 _dashDirection;
+    private Vector2 _dashOrigin;
+    private float _dashCooldown = DashCooldown;
+    private float _dashChargeTimer;
+    private float _dashTimer;
+    private int _dashDirectionChangeCount;
+    private bool _isChargingDash;
+    private bool _isDashing;
 
     public HealthSystem Health { get; private set; }
     public ElementalAccumulator ElementalEffects { get; } = new();
 
     private Player _player;
-    private int _currentPhase = 1;
 
     private readonly StatusEffectSystem _statusEffects = new();
     //Factor mínimo de slow que se puede aplicar al jefe, 0.4 significa que nunca irá a menos del 40% de su velocidad
@@ -36,9 +53,9 @@ public partial class Boss : CharacterBody2D, IEnemy
         Health = new(MaxHealth);
         Health.OnDamageTaken += OnEnemyDamageTaken;
         Health.OnDeath += OnBossDeath;
-        Health.OnHealthChanged += OnHealthChanged;
 
         _sprite = GetNode<Sprite2D>("Sprite2D");
+        _spriteOriginalPosition = _sprite.Position;
         _reactionSprite = GetNodeOrNull<Sprite2D>("ReactionSprite");
         if (_reactionSprite == null)
         {
@@ -54,6 +71,8 @@ public partial class Boss : CharacterBody2D, IEnemy
             AddChild(_reactionSprite);
         }
 
+        AddToGroup("boss");
+        CreateDashIndicator();
         _player = GetTree().GetFirstNodeInGroup("player") as Player;
     }
 
@@ -64,6 +83,21 @@ public partial class Boss : CharacterBody2D, IEnemy
         UpdateStatusEffectVisuals();
 
         if (_player == null) return;
+
+        float frameDelta = (float)delta;
+        _dashCooldown = Mathf.Max(0f, _dashCooldown - frameDelta);
+
+        if (_isChargingDash)
+        {
+            UpdateDashCharge(frameDelta);
+            return;
+        }
+
+        if (_isDashing)
+        {
+            UpdateDash(frameDelta);
+            return;
+        }
 
         if (_knockbackVelocity != Vector2.Zero)
         {
@@ -81,6 +115,12 @@ public partial class Boss : CharacterBody2D, IEnemy
         // Voltear sprite según dirección horizontal
         if (direction.X != 0)
             _sprite.FlipH = direction.X < 0;
+
+        if (_dashCooldown <= 0f)
+        {
+            BeginDashCharge(direction);
+            return;
+        }
 
         Velocity = direction * Speed * _statusEffects.MovementFactor;
         MoveAndSlide();
@@ -110,17 +150,8 @@ public partial class Boss : CharacterBody2D, IEnemy
 
     public void ApplyStatusEffect(StatusEffect effect)
     {
-        float actualFactor = effect.MovementFactor;
-
-        //En fase 2, solo recibe el 20% del efecto del slow
-        if (_currentPhase == 2)
-        {
-            float slowEffect = 1f - effect.MovementFactor;
-            actualFactor = 1f - (slowEffect * 0.2f);
-        }
-
         //El jefe resiste el slow, nunca puede quedar completamente inmóvil
-        float resistedFactor = Mathf.Max(actualFactor, MinSlowFactor);
+        float resistedFactor = Mathf.Max(effect.MovementFactor, MinSlowFactor);
 
         _statusEffects.Apply(new FrozenEffect(resistedFactor, effect.RemainingDuration));
         UpdateStatusEffectVisuals();
@@ -199,22 +230,138 @@ public partial class Boss : CharacterBody2D, IEnemy
         _knockbackVelocity = force * 0.2f;
     }
 
-    private void OnHealthChanged(float current, float max)
+    private void CreateDashIndicator()
     {
-        float percent = current / max;
-
-        //Fase 2: al llegar al 50% de vida
-        if (percent <= 0.5f && _currentPhase == 1)
+        _dashIndicator = new Node2D
         {
-            _currentPhase = 2;
-            EnterPhase2();
-        }
+            Name = "DashIndicator",
+            Visible = false,
+            ZIndex = 1
+        };
+        AddChild(_dashIndicator);
+
+        var baseArea = new Polygon2D
+        {
+            Polygon = new Vector2[]
+            {
+                Vector2.Zero,
+                new(DashLength, 0),
+                new(DashLength, DashWidth),
+                new(0, DashWidth)
+            },
+            Position = new Vector2(0, -DashWidth / 2f),
+            Color = new Color(0.95f, 0.08f, 0.08f, 0.25f)
+        };
+        _dashIndicator.AddChild(baseArea);
+
+        _dashFill = new Polygon2D
+        {
+            Position = new Vector2(0, -DashWidth / 2f),
+            Color = new Color(1f, 0.04f, 0.04f, 0.65f)
+        };
+        _dashIndicator.AddChild(_dashFill);
     }
 
-    private void EnterPhase2()
+    private void BeginDashCharge(Vector2 direction)
     {
-        //Se vuelve más rápido y cambia de color
-        Speed *= 1.5f;
+        _dashDirection = direction;
+        _dashOrigin = GlobalPosition;
+        _dashChargeTimer = 0f;
+        _dashDirectionChangeCount = 0;
+        _dashCooldown = DashCooldown;
+        _isChargingDash = true;
+        _dashIndicator.Rotation = direction.Angle();
+        _dashIndicator.Visible = true;
+        UpdateDashFill(0f);
+        Velocity = Vector2.Zero;
+    }
+
+    private void UpdateDashCharge(float delta)
+    {
+        _dashChargeTimer += delta;
+        Velocity = Vector2.Zero;
+        _sprite.Position = _spriteOriginalPosition + new Vector2(
+            Mathf.Sin(_dashChargeTimer * 52f) * 2f,
+            Mathf.Cos(_dashChargeTimer * 47f) * 1.5f);
+
+        float nextDirectionChange = (DashChargeDuration - DashDirectionLockDuration)
+            * (_dashDirectionChangeCount + 1f) / DashDirectionChangeCount;
+        while (_dashDirectionChangeCount < DashDirectionChangeCount
+            && _dashChargeTimer >= nextDirectionChange)
+        {
+            UpdateDashDirection();
+            _dashDirectionChangeCount++;
+            nextDirectionChange = (DashChargeDuration - DashDirectionLockDuration)
+                * (_dashDirectionChangeCount + 1f) / DashDirectionChangeCount;
+        }
+
+        UpdateDashFill(_dashChargeTimer / DashChargeDuration);
+
+        if (_dashChargeTimer < DashChargeDuration)
+            return;
+
+        _sprite.Position = _spriteOriginalPosition;
+        _isChargingDash = false;
+        _isDashing = true;
+        _dashTimer = 0f;
+        _dashIndicator.Visible = false;
+    }
+
+    private void UpdateDashDirection()
+    {
+        _dashDirection = (_player.GlobalPosition - GlobalPosition).Normalized();
+        _dashIndicator.Rotation = _dashDirection.Angle();
+        if (_dashDirection.X != 0)
+            _sprite.FlipH = _dashDirection.X < 0;
+    }
+
+    private void UpdateDash(float delta)
+    {
+        Velocity = _dashDirection * DashSpeed;
+        MoveAndSlide();
+        _dashTimer += delta;
+
+        if (_dashTimer < DashDuration)
+            return;
+
+        _isDashing = false;
+        Velocity = Vector2.Zero;
+        DamageDashArea();
+    }
+
+    private void UpdateDashFill(float progress)
+    {
+        float filledLength = DashLength * Mathf.Clamp(progress, 0f, 1f);
+        _dashFill.Polygon = new Vector2[]
+        {
+            Vector2.Zero,
+            new(filledLength, 0),
+            new(filledLength, DashWidth),
+            new(0, DashWidth)
+        };
+    }
+
+    private void DamageDashArea()
+    {
+        var shape = new RectangleShape2D
+        {
+            Size = new Vector2(DashLength, DashWidth)
+        };
+        Vector2 areaCenter = _dashOrigin + _dashDirection * (DashLength / 2f);
+        var query = new PhysicsShapeQueryParameters2D
+        {
+            Shape = shape,
+            Transform = new Transform2D(_dashDirection.Angle(), areaCenter),
+            CollisionMask = 1,
+            CollideWithAreas = false,
+            CollideWithBodies = true
+        };
+
+        foreach (Godot.Collections.Dictionary result in GetWorld2D().DirectSpaceState.IntersectShape(query))
+        {
+            if (result["collider"].AsGodotObject() is Player player)
+                player.Health.TakeDamage(ContactDamage, player.GlobalPosition, GetTree(), GetInstanceId());
+        }
     }
 
     private void OnBossDeath()

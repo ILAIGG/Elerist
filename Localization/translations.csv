@@ -50,6 +50,7 @@ hud.meteor_ready,Meteor Shower (E): Ready,Lluvia de meteoros (E): Lista
 hud.meteor_cooldown,Meteor Shower (E): {0:F1}s,Lluvia de meteoros (E): {0:F1}s
 hud.dash_ready,Dash (Space): Ready,Dash (Espacio): Lista
 hud.dash_cooldown,Dash (Space): {0:F1}s,Dash (Espacio): {0:F1}s
+hud.boss,Boss,Jefe
 save.no_active_run,No active run,No hay partida activa
 save.empty,Empty,Vacío
 save.play_time,Play time: {0}h {1}m {2}s,Tiempo de juego: {0}h {1}m {2}s

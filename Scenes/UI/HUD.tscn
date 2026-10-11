@@ -9,6 +9,17 @@ size = Vector2(200, 20)
 [sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_qc5w2"]
 size = Vector2(200, 20)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_boss_background"]
+bg_color = Color(0.08, 0.06, 0.07, 0.94)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.75, 0.18, 0.2, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_boss_fill"]
+bg_color = Color(0.82, 0.12, 0.16, 1)
+
 [node name="HUD" type="CanvasLayer" unique_id=1652673588]
 script = ExtResource("1_omqfp")
 
@@ -19,6 +30,37 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="BossHealthBar" type="Control" parent="Container"]
+visible = false
+layout_mode = 1
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -100.0
+offset_top = -54.0
+offset_right = 100.0
+offset_bottom = -28.0
+
+[node name="HealthBar" type="ProgressBar" parent="Container/BossHealthBar"]
+layout_mode = 1
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme_override_styles/background = SubResource("StyleBoxFlat_boss_background")
+theme_override_styles/fill = SubResource("StyleBoxFlat_boss_fill")
+show_percentage = false
+
+[node name="HealthLabel" type="Label" parent="Container/BossHealthBar"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "JEFE"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="PlayerInfoPanel" type="PanelContainer" parent="Container" unique_id=1711185430]
 layout_mode = 0
