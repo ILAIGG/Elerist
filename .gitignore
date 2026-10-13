@@ -22,5 +22,4 @@ mono_crash.*.json
 *.csproj
 
 # Custom ignores
-_Notes/
 .fake

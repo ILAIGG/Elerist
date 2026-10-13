@@ -1,0 +1,1 @@
+El fuego es el elemento que más daño hace. Capaz de destruir, consumir y purificar. A diferencia de sus hermanos, el fuego no necesita utilizarse de "manera cretiva"; es pura fuerza bruta absoluta por sí misma, presentando un peligro tanto para contra quienes se utiliza, como para quienes lo manipulan.

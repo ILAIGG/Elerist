@@ -1,0 +1,1 @@
+La tierra es el elemento más resistente, capaź de soportarlo todo. Si bien es principalmente utilizado principalmente para la defensa, eso no quiere decir que no sea un dolor de cabeza cuando se combina con otros elementos.

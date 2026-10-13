@@ -1,0 +1,1 @@
+El agua es el elemento más "moldeable", permitiendo que se creen incontables formas y reacciones con él. Si bien no hace mucho daño o tiene un fuerte poder destructivo, si se utiliza de maneras creativas, puede desatar el caos absoluto.
